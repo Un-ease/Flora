@@ -1,0 +1,120 @@
+@charset "UTF-8";
+.auth-section {
+    padding: var(--spacing-xl) 0;
+    background-color: var(--color-light-gray);
+    min-height: calc(100vh - 300px);
+    display: flex;
+    align-items: center;
+}
+
+.auth-container {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: var(--color-white);
+    border-radius: var(--radius-md);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.auth-tabs {
+    display: flex;
+    border-bottom: 1px solid #eee;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: var(--spacing-sm);
+    text-align: center;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.auth-tab.active {
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.auth-forms {
+    padding: var(--spacing-md);
+}
+
+.auth-form {
+    display: none;
+}
+
+.auth-form.active {
+    display: block;
+}
+
+.auth-form h2 {
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-dark);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 500;
+}
+
+.form-group input:not([type="checkbox"]) {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: var(--radius-sm);
+    transition: border-color var(--transition-fast);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.form-checkbox label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+.auth-form .btn {
+    width: 100%;
+    margin-top: var(--spacing-sm);
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: var(--spacing-md);
+}
+
+.forgot-password {
+    color: var(--color-gray);
+    font-size: 0.9rem;
+}
+
+.forgot-password:hover {
+    color: var(--color-primary);
+}
+
+@media (max-width: 576px) {
+    .auth-container {
+        margin: 0 var(--spacing-sm);
+    }
+    
+    .auth-forms {
+        padding: var(--spacing-sm);
+    }
+}

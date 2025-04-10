@@ -22,75 +22,55 @@
     color: var(--color-primary);
 }
 
-/* Products Layout */
-.products-layout {
+/* Search Container */
+.search-container {
+    margin-bottom: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+}
+
+.search-form {
     display: flex;
-    gap: var(--spacing-lg);
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
 }
 
-.filters {
-    width: 250px;
-    flex-shrink: 0;
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    padding-right: 3rem;
+    border: 1px solid #ddd;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
 }
 
-.products-content {
-    flex-grow: 1;
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(232, 180, 184, 0.2);
 }
 
-/* Filters */
-.filter-group {
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-md);
-    border-bottom: 1px solid #eee;
-}
-
-.filter-group h3 {
-    margin-bottom: var(--spacing-sm);
-    font-size: 1.1rem;
-}
-
-.filter-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-}
-
-.filter-list a {
+.search-button {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
     color: var(--color-gray);
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: color var(--transition-normal);
 }
 
-.filter-list a:hover,
-.filter-list a.active {
+.search-button:hover {
     color: var(--color-primary);
 }
 
-.filter-list li {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-}
-
-.price-range {
-    margin-top: var(--spacing-sm);
-}
-
-.price-slider {
+/* Products Content */
+.products-content {
     width: 100%;
-    margin-bottom: var(--spacing-xs);
-}
-
-.price-values {
-    display: flex;
-    justify-content: space-between;
-    color: var(--color-gray);
-    font-size: 0.9rem;
-}
-
-.mobile-filter-toggle {
-    display: none;
-    align-items: center;
-    gap: var(--spacing-xs);
-    margin-bottom: var(--spacing-md);
 }
 
 /* Products Header */
@@ -105,17 +85,44 @@
     color: var(--color-gray);
 }
 
-.products-sort {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
+/* Products Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--spacing-md);
 }
 
-.products-sort select {
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: var(--radius-sm);
+.product-card {
     background-color: var(--color-white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.product-image {
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.product-info {
+    padding: var(--spacing-sm);
+}
+
+.product-price {
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.add-to-cart {
+    width: 100%;
+    border-radius: 0;
 }
 
 /* Pagination */
@@ -155,26 +162,7 @@
 }
 
 /* Responsive */
-@media (max-width: 992px) {
-    .products-layout {
-        flex-direction: column;
-    }
-    
-    .filters {
-        width: 100%;
-        margin-bottom: var(--spacing-md);
-    }
-    
-    .mobile-filter-toggle {
-        display: flex;
-    }
-    
-    .filter-group:not(:first-child) {
-        display: none;
-    }
-}
-
-@media (max-width: 576px) {
+@media (max-width: 768px) {
     .products-header {
         flex-direction: column;
         align-items: flex-start;
@@ -184,5 +172,17 @@
     .pagination a {
         width: 35px;
         height: 35px;
+    }
+}
+
+@media (max-width: 576px) {
+    .search-input {
+        padding: 0.6rem 0.8rem;
+        padding-right: 2.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .search-button {
+        right: 0.3rem;
     }
 }

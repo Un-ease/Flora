@@ -5,12 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Flora</title>
+    <title>Register | Flora</title>
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/auth.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="../cssheet">
 </head>
 <body>
     <header>
@@ -47,26 +47,31 @@
         <section class="auth-section">
             <div class="container">
                 <div class="auth-container">
-                    <form id="login-form" class="auth-form">
-                        <h2>Welcome Back</h2>
+                    <form id="register-form" class="auth-form">
+                        <h2>Create Account</h2>
                         <div class="form-group">
-                            <label for="login-email">Email</label>
-                            <input type="email" id="login-email" required>
+                            <label for="register-name">Full Name</label>
+                            <input type="text" id="register-name" required>
                         </div>
                         <div class="form-group">
-                            <label for="login-password">Password</label>
-                            <input type="password" id="login-password" required>
+                            <label for="register-email">Email</label>
+                            <input type="email" id="register-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Password</label>
+                            <input type="password" id="register-password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-confirm-password">Confirm Password</label>
+                            <input type="password" id="register-confirm-password" required>
                         </div>
                         <div class="form-group form-checkbox">
-                            <input type="checkbox" id="remember-me">
-                            <label for="remember-me">Remember me</label>
+                            <input type="checkbox" id="terms" required>
+                            <label for="terms">I agree to the <a href="#">Terms & Conditions</a></label>
                         </div>
-                        <button type="submit" class="btn btn-primary">Login</button>
-                        <p class="form-footer">
-                            <a href="#" class="forgot-password">Forgot password?</a>
-                        </p>
-                        <p class="form-footer register-link">
-                            Don't have an account? <a href="register.jsp">Register here</a>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                        <p class="form-footer login-link">
+                            Already have an account? <a href="login.jsp">Login here</a>
                         </p>
                     </form>
                 </div>

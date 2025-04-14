@@ -16,38 +16,8 @@
     overflow: hidden;
 }
 
-.auth-tabs {
-    display: flex;
-    border-bottom: 1px solid #eee;
-}
-
-.auth-tab {
-    flex: 1;
-    padding: var(--spacing-sm);
-    text-align: center;
-    background: none;
-    border: none;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-}
-
-.auth-tab.active {
-    color: var(--color-primary);
-    border-bottom: 2px solid var(--color-primary);
-}
-
-.auth-forms {
-    padding: var(--spacing-md);
-}
-
 .auth-form {
-    display: none;
-}
-
-.auth-form.active {
-    display: block;
+    padding: var(--spacing-md);
 }
 
 .auth-form h2 {
@@ -107,6 +77,12 @@
 
 .forgot-password:hover {
     color: var(--color-primary);
+}
+
+.register-link, .login-link {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid #eee;
 }
 
 @media (max-width: 576px) {

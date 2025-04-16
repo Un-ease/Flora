@@ -11,6 +11,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="../cssheet">
+    <style>
+		.error-message {
+		    color: red;
+		    font-size: 0.8rem;
+		    margin-top: 5px;
+		    display: none;
+		}
+		
+		input.error {
+		    border: 1px solid red !important;
+		}
+    </style>
 </head>
 <body>
     <header>
@@ -51,15 +63,15 @@
                         <h2>Create Account</h2>
                         <div class="form-group">
                             <label for="register-name">Full Name</label>
-                            <input type="text" id="register-name" required>
+                            <input type="text" id="register-name" name="fullName" required>
                         </div>
                         <div class="form-group">
                             <label for="register-email">Email</label>
-                            <input type="email" id="register-email" required>
+                            <input type="email" id="register-email" name="email" required>
                         </div>
                         <div class="form-group">
                             <label for="register-password">Password</label>
-                            <input type="password" id="register-password" required>
+                            <input type="password" id="register-password" name="passwords" required>
                         </div>
                         <div class="form-group">
                             <label for="register-confirm-password">Confirm Password</label>
@@ -68,6 +80,7 @@
                         <div class="form-group form-checkbox">
                             <input type="checkbox" id="terms" required>
                             <label for="terms">I agree to the <a href="#">Terms & Conditions</a></label>
+                            <small id="password-error" class="error-message" style="color: red; display: none;">Passwords do not match</small>
                         </div>
                         <button type="submit" class="btn btn-primary">Register</button>
                         <p class="form-footer login-link">
@@ -118,5 +131,25 @@
             </div>
         </div>
     </footer>
+    <script>
+    document.getElementById('register-form').addEventListener('submit', function(e) {
+        const password = document.getElementById('register-password').value;
+        const confirmPassword = document.getElementById('register-confirm-password').value;
+        const errorElement = document.getElementById('password-error');
+        
+        if (password !== confirmPassword) {
+            e.preventDefault(); // Prevent form submission
+            errorElement.style.display = 'block';
+            
+            // Highlight the fields in red
+            document.getElementById('register-password').style.borderColor = 'red';
+            document.getElementById('register-confirm-password').style.borderColor = 'red';
+        } else {
+            errorElement.style.display = 'none';
+            document.getElementById('register-password').style.borderColor = '';
+            document.getElementById('register-confirm-password').style.borderColor = '';
+        }
+    });
+    </script>
 </body>
 </html>

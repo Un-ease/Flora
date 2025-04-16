@@ -47,15 +47,15 @@
         <section class="auth-section">
             <div class="container">
                 <div class="auth-container">
-                    <form id="login-form" class="auth-form">
+                    <form id="login-form" class="auth-form" action="${pageContext.request.contextPath}/LoginController" method="post">
                         <h2>Welcome Back</h2>
                         <div class="form-group">
                             <label for="login-email">Email</label>
-                            <input type="email" id="login-email" required>
+                            <input type="email" id="login-email" name ="email" required>
                         </div>
                         <div class="form-group">
                             <label for="login-password">Password</label>
-                            <input type="password" id="login-password" required>
+                            <input type="password" id="login-password" name="password" required>
                         </div>
                         <div class="form-group form-checkbox">
                             <input type="checkbox" id="remember-me">

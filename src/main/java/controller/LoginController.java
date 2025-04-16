@@ -59,12 +59,12 @@ public class LoginController extends HttpServlet {
 			} else {
 				// If login fails, send an error message to the log in page
 				request.setAttribute("errorMessage", "Invalid email or password. Please try again.");
-				request.getRequestDispatcher("/pages/Login.jsp").forward(request, response);
+				request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			// Log the error properly in production (use a logger)
 			request.setAttribute("errorMessage", "A system error occurred. Please try again later.");
-			request.getRequestDispatcher("/pages/Login.jsp").forward(request, response);
+			request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
 		} finally {
 			if (out != null) {
 				out.close();

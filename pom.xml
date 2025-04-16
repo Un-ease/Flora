@@ -12,10 +12,15 @@
     <version>8.0.33</version>
 </dependency>
 <dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>javax.servlet-api</artifactId>
-    <version>4.0.1</version>
+    <groupId>jakarta.servlet</groupId>
+    <artifactId>jakarta.servlet-api</artifactId>
+    <version>6.0.0</version> <!-- For Tomcat 10.1 -->
     <scope>provided</scope>
+</dependency>
+<dependency>
+    <groupId>org.mindrot</groupId>
+    <artifactId>jbcrypt</artifactId>
+    <version>0.4</version>
 </dependency>
   </dependencies>
   <build>

@@ -8,6 +8,9 @@ public class User {
 	private String role;
 	
 	//Constructors
+	public User(){
+	}
+	
 	public User(int userID, String fullName, String email, String password, String role) {
 		this.userId = userId;
 		this.fullName = fullName;

@@ -59,7 +59,7 @@
         <section class="auth-section">
             <div class="container">
                 <div class="auth-container">
-                    <form id="register-form" class="auth-form">
+                    <form action="${pageContext.request.contextPath}/RegisterController" id="register-form" class="auth-form" method="post">
                         <h2>Create Account</h2>
                         <div class="form-group">
                             <label for="register-name">Full Name</label>
@@ -71,7 +71,7 @@
                         </div>
                         <div class="form-group">
                             <label for="register-password">Password</label>
-                            <input type="password" id="register-password" name="passwords" required>
+                            <input type="password" id="register-password" name="password" required>
                         </div>
                         <div class="form-group">
                             <label for="register-confirm-password">Confirm Password</label>

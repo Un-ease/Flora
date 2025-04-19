@@ -37,7 +37,7 @@ public class UserDAO {
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    String storedHash = rs.getString("password_hash"); // ✅ Corrected column name
+                    String storedHash = rs.getString("password_hash");
 
                     if (BCrypt.checkpw(password, storedHash)) {
                         return new User(

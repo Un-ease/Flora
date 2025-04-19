@@ -6,14 +6,16 @@ import java.io.PrintWriter;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-
+import java.util.UUID;
 import model.User;
+import utils.JwtUtil;
 import dao.UserDAO;
 /**
  * Servlet implementation class LoginController
@@ -41,35 +43,64 @@ public class LoginController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-		response.setContentType("text/html");
-		PrintWriter out = response.getWriter();
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
-		try {
-			UserDAO userdao = new UserDAO();
-			User user = userdao.login(email, password);
-			if(user != null) {
-				HttpSession session = request.getSession();
-				session.setAttribute("user", user);
-				
-				response.sendRedirect(request.getContextPath() + "/pages/index.jsp");
-			} else {
-				// If login fails, send an error message to the log in page
-				request.setAttribute("errorMessage", "Invalid email or password. Please try again.");
-				request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
-			}
-		} catch (ClassNotFoundException | SQLException e) {
-			// Log the error properly in production (use a logger)
-			request.setAttribute("errorMessage", "A system error occurred. Please try again later.");
-			request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
-		} finally {
-			if (out != null) {
-				out.close();
-			}
-		}
-	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+
+        try {
+            UserDAO userDAO = new UserDAO();
+            User user = userDAO.login(email, password);
+
+            if (user != null) {
+                // 1. Create HTTP session and store user object
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+                
+                // Generate CSRF token
+                String csrfToken = UUID.randomUUID().toString();
+                session.setAttribute("csrfToken", csrfToken);
+                
+                // 2. Generate JWT token
+                String jwtToken = JwtUtil.generateToken(user.getEmail(), user.getRole());
+
+                // 3. Set JWT token as HTTP-only cookie
+                Cookie jwtCookie = new Cookie("jwt", jwtToken);
+                jwtCookie.setHttpOnly(true);
+                jwtCookie.setSecure(request.isSecure());
+                jwtCookie.setPath("/");
+                jwtCookie.setMaxAge(24 * 60 * 60); // 24 hours
+                
+                // Set SameSite attribute
+                String sameSiteHeader = String.format("jwt=%s; SameSite=Strict", jwtToken);
+                response.setHeader("Set-Cookie", sameSiteHeader);
+                response.addCookie(jwtCookie);
+
+                // 4. Handle redirect after login
+                String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+                if (redirectUrl != null) {
+                    session.removeAttribute("redirectAfterLogin");
+                    response.sendRedirect(redirectUrl);
+                } else {
+                    // Default redirect based on role
+                    if ("Admin".equals(user.getRole())) {
+                        response.sendRedirect(request.getContextPath() + "/pages/AdminDashboard.jsp");
+                    } else {
+                        response.sendRedirect(request.getContextPath() + "/pages/user-dashboard.jsp");
+                    }
+                }
+            } else {
+                // Login failed
+                request.setAttribute("errorMessage", "Invalid email or password");
+                request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "System error during login: " + e.getMessage());
+            request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
+        }
+    }
+
 
 }

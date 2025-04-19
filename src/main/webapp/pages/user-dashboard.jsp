@@ -1,6 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+   
+<%
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,7 +80,12 @@
                                 <li><a href="#" data-tab="addresses">Addresses</a></li>
                                 <li><a href="#" data-tab="wishlist">Wishlist</a></li>
                                 <li><a href="#" data-tab="account">Account Details</a></li>
-                                <li><a href="index.jsp">Logout</a></li>
+                                <li>
+    <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
+    <form id="logoutForm" action="${pageContext.request.contextPath}/LogOutController" method="get" style="display:none;">
+        <input type="hidden" name="csrfToken" value="${csrfToken}">
+    </form>
+</li>
                             </ul>
                         </nav>
                     </aside>
@@ -286,3 +296,4 @@
         });
     </script>
 </body>
+</html>

@@ -53,4 +53,16 @@ public class ProductDAO {
 
 	    return isRowInserted;
 	}
+	
+	 public boolean deleteProduct(int productID) throws SQLException {
+	        String query = "DELETE FROM products WHERE product_ID = ?";
+	        try (PreparedStatement ps = conn.prepareStatement(query)) {
+	            ps.setInt(1, productID);
+	            int rowsAffected = ps.executeUpdate();
+	            return rowsAffected > 0;
+	        } catch (SQLException e) {
+	            System.out.println("SQL Error: " + e.getMessage());
+	            throw e;
+	        }
+	    }
 }

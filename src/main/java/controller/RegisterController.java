@@ -1,20 +1,17 @@
 package controller;
 
-import java.util.ArrayList;
-import java.sql.SQLException;
-import java.io.PrintWriter;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
-
 import model.User;
+import java.util.UUID;
 import dao.UserDAO;
+import utils.JwtUtil;
 /**
  * Servlet implementation class RegisterController
  */
@@ -57,16 +54,35 @@ public class RegisterController extends HttpServlet {
         try {
             UserDAO userDao = new UserDAO();
             if (userDao.register(newUser)) {
+                // Create JWT token
+                String token = JwtUtil.generateToken(newUser.getEmail(), newUser.getRole());
+                
+                // Set token in cookie
+                Cookie cookie = new Cookie("jwt", token);
+                cookie.setHttpOnly(true);
+                cookie.setSecure(request.isSecure());
+                cookie.setPath("/");
+                cookie.setMaxAge(24 * 60 * 60); // 24 hours
+                response.addCookie(cookie);
+                
+                // Set SameSite attribute
+                String sameSiteHeader = String.format("jwt=%s; SameSite=Strict", token);
+                response.setHeader("Set-Cookie", sameSiteHeader);
+                
+                // Set user in session and CSRF token
                 HttpSession session = request.getSession();
                 session.setAttribute("user", newUser);
-                response.sendRedirect("pages/index.jsp"); // Relative path
+                String csrfToken = UUID.randomUUID().toString();
+                session.setAttribute("csrfToken", csrfToken);
+                
+                response.sendRedirect(request.getContextPath() + "/pages/index.jsp");
             } else {
-                request.setAttribute("errorMessage", "Registration failed. Email may already exist.");
+                request.setAttribute("errorMessage", "Registration failed. Email may already be in use.");
                 request.getRequestDispatcher("/pages/register.jsp").forward(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "System error during registration.");
+            request.setAttribute("errorMessage", "System error during registration: " + e.getMessage());
             request.getRequestDispatcher("/pages/register.jsp").forward(request, response);
         }
     }

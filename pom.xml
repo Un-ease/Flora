@@ -12,6 +12,11 @@
     <version>8.0.33</version>
 </dependency>
 <dependency>
+    <groupId>com.auth0</groupId>
+    <artifactId>java-jwt</artifactId>
+    <version>4.4.0</version>
+</dependency>
+<dependency>
     <groupId>jakarta.servlet</groupId>
     <artifactId>jakarta.servlet-api</artifactId>
     <version>6.0.0</version> <!-- For Tomcat 10.1 -->

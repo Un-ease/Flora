@@ -7,8 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Flora</title>
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/auth.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
@@ -50,13 +50,27 @@
                 <div class="auth-container">
                     <form id="login-form" class="auth-form" action="${pageContext.request.contextPath}/LoginController" method="post">
                         <h2>Welcome Back</h2>
+
+						<%-- Error Message Display --%>
+						<c:if test="${not empty errorMessage}">
+						    <div class="alert alert-danger" style="color: red; padding: 10px; margin-bottom: 15px; background-color: #ffeeee; border: 1px solid #ffcccc; border-radius: 4px;">
+						        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: middle; margin-right: 5px;">
+						            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+						            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+						        </svg>
+						        ${errorMessage}
+						    </div>
+						</c:if>
+						
                         <div class="form-group">
                             <label for="login-email">Email</label>
-                            <input type="email" id="login-email" name ="email" required>
+                            <input type="email" id="login-email" name="email" value="${param.email}" 
+      					 class="${not empty errorMessage ? 'is-invalid' : ''}" required>
                         </div>
                         <div class="form-group">
                             <label for="login-password">Password</label>
-                            <input type="password" id="login-password" name="password" required>
+                           <input type="password" id="login-password" name="password" 
+      						class="${not empty errorMessage ? 'is-invalid' : ''}" required>
                         </div>
                         <div class="form-group form-checkbox">
                             <input type="checkbox" id="remember-me">

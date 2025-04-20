@@ -27,7 +27,7 @@ public class SessionFilter extends HttpFilter implements Filter {
         "/LoginController",
         "/RegisterController",
         "/pages/index.jsp",
-        "/pages/css/",
+        "/css/",
         "/pages/js/",
         "/items/"
     };

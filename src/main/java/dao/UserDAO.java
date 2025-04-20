@@ -53,4 +53,53 @@ public class UserDAO {
             }
         }
     }
+    
+    public boolean isEmailTaken(String email) throws SQLException, ClassNotFoundException {
+        Connection conn = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        boolean emailExists = false;
+
+        try {
+            // Get database connection
+            conn = DatabaseConnection.getConnection();
+            
+            // SQL query to check if email exists
+            String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
+            statement = conn.prepareStatement(sql);
+            statement.setString(1, email);
+            
+            resultSet = statement.executeQuery();
+            
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                emailExists = count > 0;
+            }
+        } finally {
+            // Close resources in reverse order of creation
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        return emailExists;
+    }
 }

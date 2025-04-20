@@ -7,23 +7,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | Flora</title>
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/auth.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/auth.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="../cssheet">
-    <style>
-		.error-message {
-		    color: red;
-		    font-size: 0.8rem;
-		    margin-top: 5px;
-		    display: none;
-		}
-		
-		input.error {
-		    border: 1px solid red !important;
-		}
-    </style>
+    
+<style>
+    .error-message {
+        color: red;
+        font-size: 0.9rem;
+        margin: 10px 0;
+        padding: 10px;
+        background-color: #ffeeee;
+        border: 1px solid #ffcccc;
+        border-radius: 4px;
+    }
+</style>
+    
 </head>
 <body>
     <header>
@@ -62,13 +63,27 @@
                 <div class="auth-container">
                     <form action="${pageContext.request.contextPath}/RegisterController" id="register-form" class="auth-form" method="post">
                         <h2>Create Account</h2>
+                        
+                        <%-- Display error message if exists --%>
+						<c:if test="${not empty errorMessage}">
+						    <div class="error-message">
+						        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 5px;">
+						            <circle cx="12" cy="12" r="10"></circle>
+						            <line x1="12" y1="8" x2="12" y2="12"></line>
+						            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+						        </svg>
+						        ${errorMessage}
+						    </div>
+						</c:if>
+                        
                         <div class="form-group">
                             <label for="register-name">Full Name</label>
-                            <input type="text" id="register-name" name="fullName" required>
+                            <input type="text" id="register-name" name="fullName" 
+                                   value="${param.fullName}" required>
                         </div>
                         <div class="form-group">
                             <label for="register-email">Email</label>
-                            <input type="email" id="register-email" name="email" required>
+                            <input type="email" id="register-email" name="email" value="${param.email}" required>	
                         </div>
                         <div class="form-group">
                             <label for="register-password">Password</label>
@@ -77,11 +92,13 @@
                         <div class="form-group">
                             <label for="register-confirm-password">Confirm Password</label>
                             <input type="password" id="register-confirm-password" required>
+                            <small id="password-error" class="error-message" style="display: none;">
+                                Passwords do not match
+                            </small>
                         </div>
                         <div class="form-group form-checkbox">
                             <input type="checkbox" id="terms" required>
                             <label for="terms">I agree to the <a href="#">Terms & Conditions</a></label>
-                            <small id="password-error" class="error-message" style="color: red; display: none;">Passwords do not match</small>
                         </div>
                         <button type="submit" class="btn btn-primary">Register</button>
                         <p class="form-footer login-link">
@@ -139,16 +156,10 @@
         const errorElement = document.getElementById('password-error');
         
         if (password !== confirmPassword) {
-            e.preventDefault(); // Prevent form submission
+            e.preventDefault();
             errorElement.style.display = 'block';
-            
-            // Highlight the fields in red
-            document.getElementById('register-password').style.borderColor = 'red';
-            document.getElementById('register-confirm-password').style.borderColor = 'red';
-        } else {
-            errorElement.style.display = 'none';
-            document.getElementById('register-password').style.borderColor = '';
-            document.getElementById('register-confirm-password').style.borderColor = '';
+            document.getElementById('register-password').classList.add('error');
+            document.getElementById('register-confirm-password').classList.add('error');
         }
     });
     </script>

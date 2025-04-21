@@ -6,14 +6,22 @@
     response.setHeader("Pragma", "no-cache");
     response.setDateHeader("Expires", 0);
 %>
+
+<%
+    // Check if user is logged in
+    if (session.getAttribute("user") == null) {
+        response.sendRedirect(request.getContextPath() + "/pages/login.jsp");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account | Flora</title>
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/dashboard.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
@@ -64,14 +72,14 @@
                 <div class="dashboard-layout">
                     <aside class="dashboard-sidebar">
                         <div class="user-info">
-                            <div class="user-avatar">
-                                <img src="/placeholder.svg?height=100&width=100" alt="User Avatar">
-                            </div>
-                            <div class="user-details">
-                                <h3>John Doe</h3>
-                                <p>john.doe@example.com</p>
-                            </div>
-                        </div>
+						    <div class="user-avatar">
+						        <img src="${pageContext.request.contextPath}/images/user-avatar.png" alt="User Avatar">
+						    </div>
+						    <div class="user-details">
+						        <h3>${sessionScope.user.fullName}</h3>
+						        <p>${sessionScope.user.email}</p>
+						    </div>
+						</div>
                         
                         <nav class="dashboard-nav">
                             <ul>
@@ -94,9 +102,9 @@
                         <!-- Dashboard Tab -->
                         <div class="dashboard-tab active" id="dashboard-tab">
                             <div class="welcome-message">
-                                <h2>Welcome back, John!</h2>
-                                <p>From your account dashboard you can view your recent orders, manage your shipping and billing addresses, and edit your password and account details.</p>
-                            </div>
+							    <h2>Welcome back, ${sessionScope.user.fullName}!</h2>
+							    <p>From your account dashboard you can view your recent orders, manage your shipping and billing addresses, and edit your password and account details.</p>
+							</div>
                             
                             <div class="dashboard-cards">
                                 <div class="dashboard-card">

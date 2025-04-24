@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Bloom & Blossom</title>
+    <title>Admin Dashboard | Flora</title>
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,14 +16,17 @@
     <header class="admin-header">
         <div class="container">
             <div class="logo">
-                <a href="index.html">
-                    <h1>Bloom & Blossom</h1>
+                <a href="index.jsp">
+                    <h1>Flora</h1>
                 </a>
             </div>
             <div class="admin-header-right">
                 <div class="admin-user">
                     <span>Admin User</span>
-                    <a href="index.html">Logout</a>
+    <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
+    <form id="logoutForm" action="${pageContext.request.contextPath}/LogOutController" method="get" style="display:none;">
+        <input type="hidden" name="csrfToken" value="${csrfToken}">
+    </form>
                 </div>
             </div>
         </div>

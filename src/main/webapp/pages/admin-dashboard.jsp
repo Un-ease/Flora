@@ -7,10 +7,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Flora</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<style>
+	.alert {
+	    padding: 15px;
+	    margin-bottom: 20px;
+	    border: 1px solid transparent;
+	    border-radius: 4px;
+	}
+	.alert-success {
+	    color: #3c763d;
+	    background-color: #dff0d8;
+	    border-color: #d6e9c6;
+	}
+	.alert-danger {
+	    color: #a94442;
+	    background-color: #f2dede;
+	    border-color: #ebccd1;
+	}
+</style>
 </head>
 <body class="admin-body">
     <header class="admin-header">
@@ -163,41 +181,37 @@
                 <div class="section-header">
                     <h3>Add New Product</h3>
                 </div>
-                <form class="admin-form">
+                <form action="${pageContext.request.contextPath}/AddProductController" class="admin-form" method="post"  enctype="multipart/form-data">
                     <div class="form-row">
+                    <c:if test="${not empty successMessage}">
+					    <div class="alert alert-success">${successMessage}</div>
+					</c:if>
+					<c:if test="${not empty errorMessage}">
+					    <div class="alert alert-danger">${errorMessage}</div>
+					</c:if>
                         <div class="form-group">
                             <label for="product-name">Product Name</label>
-                            <input type="text" id="product-name" required>
+                            <input type="text" id="product-name" name="productName" required>
                         </div>
                         <div class="form-group">
                             <label for="product-price">Price ($)</label>
-                            <input type="number" id="product-price" step="0.01" required>
+                            <input type="number" id="product-price" name="price" step="0.01" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="product-category">Category</label>
-                            <select id="product-category">
-                                <option>Roses</option>
-                                <option>Tulips</option>
-                                <option>Lilies</option>
-                                <option>Bouquets</option>
-                                <option>Plants</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
                             <label for="product-stock">Stock Quantity</label>
-                            <input type="number" id="product-stock" required>
+                            <input type="number" id="product-stock" name="quantity" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="product-description">Description</label>
-                        <textarea id="product-description" rows="4"></textarea>
+                        <textarea id="product-description" name="productDescription" rows="4"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="product-image">Product Image</label>
-                        <input type="file" id="product-image">
-                    </div>
+				        <label for="product-image">Product Image</label>
+				        <input type="file" id="product-image" name="image" accept="image/*" required>
+				    </div>
                     <div class="form-actions">
                         <button type="submit" class="btn">Add Product</button>
                         <button type="reset" class="btn-outline">Reset</button>

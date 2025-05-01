@@ -2,20 +2,29 @@ package controller;
 
 import dao.ProductDAO;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import model.Product;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
-
 /**
  * Servlet implementation class AddProductController
  */
 @WebServlet("/AddProductController")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, maxFileSize = 1024 * 1024 * 10,  maxRequestSize = 1024 * 1024 * 50)   // 10MB
+   // 50MB
 public class AddProductController extends HttpServlet {
+	private static final String UPLOAD_DIR = "uploads";
+
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -37,50 +46,73 @@ public class AddProductController extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Retrieve form data
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        
+        // Get application path
+        String appPath = request.getServletContext().getRealPath("");
+        String uploadPath = appPath + File.separator + UPLOAD_DIR;
+        
+        // Create upload folder if it doesn't exist
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+        
+        // Get form data
         String productName = request.getParameter("productName");
         String productDescription = request.getParameter("productDescription");
-        String priceParam = request.getParameter("price");
-        String image = request.getParameter("image");
-        String quantityParam = request.getParameter("quantity");
-
+        double price = Double.parseDouble(request.getParameter("price"));
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
+        
+        // Handle file upload
+        Part filePart = request.getPart("image");
+        String fileName = System.currentTimeMillis() + "_" + extractFileName(filePart);
+        String filePath = uploadPath + File.separator + fileName;
+        
+        try (InputStream fileContent = filePart.getInputStream()) {
+            Files.copy(fileContent, new File(filePath).toPath(), 
+                   StandardCopyOption.REPLACE_EXISTING);
+        }
+        
+        // Create product object
+        Product product = new Product();
+        product.setProductName(productName);
+        product.setProductDescription(productDescription);
+        product.setPrice(price);
+        product.setQuantity(quantity);
+        product.setImage(fileName); // Store just the filename
+        
         try {
-            // Validate input
-            if (productName == null || productName.isEmpty()) {
-                throw new IllegalArgumentException("Product name cannot be null or empty.");
-            }
-            double price = Double.parseDouble(priceParam);
-            if (price <= 0) {
-                throw new IllegalArgumentException("Price must be greater than zero.");
-            }
-            int quantity = Integer.parseInt(quantityParam);
-
-            // Create a Product object
-            Product product = new Product();
-            product.setProductName(productName);
-            product.setProductDescription(productDescription);
-            product.setPrice(price);
-            product.setImage(image);
-            product.setQuantity(quantity);
-
-            // Call the DAO to add the product
             ProductDAO productDAO = new ProductDAO();
             boolean isAdded = productDAO.addProduct(product);
-
+            
             if (isAdded) {
-                response.sendRedirect("success.jsp?message=Product added successfully");
+                request.setAttribute("successMessage", "Product added successfully!");
+                request.getRequestDispatcher("/pages/admin-dashboard.jsp").forward(request, response);
             } else {
-                response.sendRedirect("error.jsp?message=Failed to add product");
+                request.setAttribute("errorMessage", "Failed to add product");
+                request.getRequestDispatcher("/pages/admin-dashboard.jsp").forward(request, response);
             }
-        } catch (IllegalArgumentException e) {
-            response.sendRedirect("error.jsp?message=" + e.getMessage());
-        } catch (SQLException e) {
-            response.sendRedirect("error.jsp?message=Database error: " + e.getMessage());
-        } catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Error: " + e.getMessage());
+            request.getRequestDispatcher("/pages/admin-dashboard.jsp").forward(request, response);
+        }
     }
+    
+    private String extractFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] items = contentDisp.split(";");
+        for (String s : items) {
+            if (s.trim().startsWith("filename")) {
+                return s.substring(s.indexOf("=") + 2, s.length() - 1);
+            }
+        }
+        return "";
+    }
+        
+        
+    
 
 }

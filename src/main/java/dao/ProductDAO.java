@@ -14,48 +14,29 @@ public class ProductDAO {
 	}
 
 	public boolean addProduct(Product product) throws SQLException {
-	    if (product == null) {
-	        throw new IllegalArgumentException("Product cannot be null");
-	    }
-
-	    if (conn == null) {
-	        throw new SQLException("Database connection is not established.");
-	    }
-
-	    boolean isRowInserted = false;
-	    String query = "INSERT INTO products (product_name, product_description, price, image, stock_quantity, sold) VALUES (?, ?, ?, ?, ?, ?)";
-
-	    // Validate input data
-	    if (product.getProductName() == null || product.getProductName().isEmpty()) {
-	        throw new IllegalArgumentException("Product name cannot be null or empty");
-	    }
-	    if (product.getPrice() <= 0) {
-	        throw new IllegalArgumentException("Price must be greater than zero");
-	    }
-
+	    Objects.requireNonNull(product, "Product cannot be null");
+	    
+	    String query = "INSERT INTO Products (product_name, product_description, price, image, stock_quantity, sold) " +
+	                   "VALUES (?, ?, ?, ?, ?, ?)";
+	    
 	    try (PreparedStatement ps = conn.prepareStatement(query)) {
 	        ps.setString(1, product.getProductName());
 	        ps.setString(2, product.getProductDescription());
 	        ps.setDouble(3, product.getPrice());
 	        ps.setString(4, product.getImage());
 	        ps.setInt(5, product.getQuantity());
-	        ps.setInt(6, 0); // Hardcoded sold value
-
-	        int rows = ps.executeUpdate();
-	        if (rows > 0) {
-	            isRowInserted = true;
-	        }
+	        ps.setInt(6, 0); // Initial sold count
+	        
+	        int rowsAffected = ps.executeUpdate();
+	        return rowsAffected > 0;
 	    } catch (SQLException e) {
-	        System.out.println("SQL Error: " + e.getMessage());
-	        e.printStackTrace();
-	        throw new RuntimeException("Database operation failed", e);
+	        System.err.println("Error adding product: " + e.getMessage());
+	        throw e;
 	    }
-
-	    return isRowInserted;
 	}
 	
 	 public boolean deleteProduct(int productID) throws SQLException {
-	        String query = "DELETE FROM products WHERE product_ID = ?";
+	        String query = "DELETE FROM Products WHERE product_ID = ?";
 	        try (PreparedStatement ps = conn.prepareStatement(query)) {
 	            ps.setInt(1, productID);
 	            int rowsAffected = ps.executeUpdate();

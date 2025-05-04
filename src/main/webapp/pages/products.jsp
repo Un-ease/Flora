@@ -1,19 +1,39 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<%-- At the top of products.jsp --%>
+<%@ page import="java.util.List" %>
+<%@ page import="model.Product" %>
+
+<%-- Debug code --%>
+<%
+    List<Product> products = (List<Product>) request.getAttribute("products");
+    if (products != null) {
+    	
+        for (Product p : products) {
+            System.out.println("JSP sees: " + p.getProductName() + " - " + p.getImage());
+        }
+    } else {
+        System.out.println("Products attribute is null in JSP");
+        response.sendRedirect(request.getContextPath()+"/products");
+        
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop | Flora</title>
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/products.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/products.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <header>
         <div class="container header-container">
             <div class="logo">
@@ -24,7 +44,7 @@
             <nav>
                 <ul class="nav-links">
                     <li><a href="index.jsp">Home</a></li>
-                    <li><a href="products.jsp" class="active">Shop</a></li>
+                    <li><a href="${pageContext.request.contextPath}/ProductServlet" class="active">Shop</a></li>
                     <li><a href="#">About</a></li>
                     <li><a href="#">Contact</a></li>
                 </ul>
@@ -72,115 +92,46 @@
                         </div>
                     </div>
                     
-                    <div class="products-grid">
-                        <!-- Product 1 -->
-                        <div class="product-card">
-                            <a href="product-details.jsp">
-                                <div class="product-image" style="background-image: url('/placeholder.svg?height=400&width=400')"></div>
-                                <div class="product-info">
-                                    <h3>Spring Delight</h3>
-                                    <p class="product-price">$49.99</p>
-                                </div>
-                            </a>
-                            <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                        </div>
-                        
-                        <!-- Product 2 -->
-                        <div class="product-card">
-                            <a href="product-details.jsp">
-                                <div class="product-image" style="background-image: url('/placeholder.svg?height=400&width=400')"></div>
-                                <div class="product-info">
-                                    <h3>Pastel Dreams</h3>
-                                    <p class="product-price">$59.99</p>
-                                </div>
-                            </a>
-                            <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                        </div>
-                        
-                        <!-- Product 3 -->
-                        <div class="product-card">
-                            <a href="product-details.jsp">
-                                <div class="product-image" style="background-image: url('/placeholder.svg?height=400&width=400')"></div>
-                                <div class="product-info">
-                                    <h3>Elegant Roses</h3>
-                                    <p class="product-price">$69.99</p>
-                                </div>
-                            </a>
-                            <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                        </div>
-                        
-                        <!-- Product 4 -->
-                        <div class="product-card">
-                            <a href="product-details.jsp">
-                                <div class="product-image" style="background-image: url('/placeholder.svg?height=400&width=400')"></div>
-                                <div class="product-info">
-                                    <h3>Sunshine Bouquet</h3>
-                                    <p class="product-price">$45.99</p>
-                                </div>
-                            </a>
-                            <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                        </div>
-                        
-                        <!-- Product 5 -->
-                        <div class="product-card">
-                            <a href="product-details.jsp">
-                                <div class="product-image" style="background-image: url('/placeholder.svg?height=400&width=400')"></div>
-                                <div class="product-info">
-                                    <h3>Lavender Love</h3>
-                                    <p class="product-price">$55.99</p>
-                                </div>
-                            </a>
-                            <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                        </div>
-                        
-                        <!-- Product 6 -->
-                        <div class="product-card">
-                            <a href="product-details.jsp">
-                                <div class="product-image" style="background-image: url('/placeholder.svg?height=400&width=400')"></div>
-                                <div class="product-info">
-                                    <h3>Tropical Paradise</h3>
-                                    <p class="product-price">$79.99</p>
-                                </div>
-                            </a>
-                            <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                        </div>
-                        
-                        <!-- Product 7 -->
-                        <div class="product-card">
-                            <a href="product-details.jsp">
-                                <div class="product-image" style="background-image: url('/placeholder.svg?height=400&width=400')"></div>
-                                <div class="product-info">
-                                    <h3>Rustic Charm</h3>
-                                    <p class="product-price">$52.99</p>
-                                </div>
-                            </a>
-                            <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                        </div>
-                        
-                        <!-- Product 8 -->
-                        <div class="product-card">
-                            <a href="product-details.jsp">
-                                <div class="product-image" style="background-image: url('/placeholder.svg?height=400&width=400')"></div>
-                                <div class="product-info">
-                                    <h3>Peaceful Lily</h3>
-                                    <p class="product-price">$62.99</p>
-                                </div>
-                            </a>
-                            <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                        </div>
-                        
-                        <!-- Product 9 -->
-                        <div class="product-card">
-                            <a href="product-details.jsp">
-                                <div class="product-image" style="background-image: url('/placeholder.svg?height=400&width=400')"></div>
-                                <div class="product-info">
-                                    <h3>Garden Delight</h3>
-                                    <p class="product-price">$58.99</p>
-                                </div>
-                            </a>
-                            <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                        </div>
-                    </div>
+                    <!-- Error/Success Messages -->
+                    <c:if test="${not empty successMessage}">
+                        <div class="alert alert-success">${successMessage}</div>
+                    </c:if>
+                    
+                    <c:if test="${not empty errorMessage}">
+                        <div class="alert alert-danger">${errorMessage}</div>
+                    </c:if>
+                    
+                     <c:choose>
+					    <c:when test="${empty products}">
+					        <div class="no-products">
+					            <p>No products found. Please check back later.</p>
+					            <p>Debug: products attribute is empty or null</p>
+					        </div>
+					    </c:when>
+					    <c:otherwise>
+					        <div class="products-grid">
+					            <c:forEach var="product" items="${products}">
+					                <div class="product-card">
+					                    <a href="${pageContext.request.contextPath}/product-details?id=${product.productId}">
+					                        <div class="product-image" 
+					                             style="background-image: url('${pageContext.request.contextPath}/uploads/${product.image}')">
+					                             <c:if test="${empty product.image}">
+					                                 <div class="no-image">No Image</div>
+					                             </c:if>
+					                        </div>
+					                        <div class="product-info">
+					                            <h3>${product.productName}</h3>
+					                            <p class="product-price">$${product.price}</p>
+					                        </div>
+					                    </a>
+					                </div>
+					            </c:forEach>
+					        </div>
+					    </c:otherwise>
+					</c:choose>
+
+			                    
+                       
                     
                     <div class="pagination">
                         <a href="#" class="active">1</a>

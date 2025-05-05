@@ -6,7 +6,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Product" %>
 
-<%-- Debug code --%>
 <%
     List<Product> products = (List<Product>) request.getAttribute("products");
     if (products != null) {
@@ -43,7 +42,7 @@
             </div>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="index.jsp">Home</a></li>
+                    <li><a href="${pageContext.request.contextPath}/pages/index.jsp">Home</a></li>
                     <li><a href="${pageContext.request.contextPath}/ProductServlet" class="active">Shop</a></li>
                     <li><a href="#">About</a></li>
                     <li><a href="#">Contact</a></li>

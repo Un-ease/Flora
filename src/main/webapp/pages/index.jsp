@@ -1,19 +1,36 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+   
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="java.util.List" %>
+<%@ page import="model.Product" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flora | Beautiful Flowers Delivered</title>
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+<c:choose>
+    <c:when test="${not empty featuredProducts}">
+        <c:forEach items="${featuredProducts}" var="p">
+            <!-- Debug output (visible in server logs) -->
+            <c:out value="JSP sees: ${p.productName} - ${p.image}" escapeXml="false"/>
+        </c:forEach>
+    </c:when>
+    <c:otherwise>
+        <!-- Debug output and redirect -->
+        <c:out value="Featured products attribute is null in JSP"/>
+        <c:redirect url="${pageContext.request.contextPath}/"/>
+    </c:otherwise>
+</c:choose>
     <header>
         <div class="container header-container">
             <div class="logo">
@@ -53,7 +70,7 @@
                     <p>Handcrafted floral arrangements delivered with care</p>
                     <a href="products.jsp" class="btn btn-primary">Shop Now</a>
                 </div>
-                <img src="../items/Bouquet.png" >
+                <img src="${pageContext.request.contextPath}/items/Bouquet.png" alt="Flower Bouquet">
             </div>
         </section>
 
@@ -61,48 +78,43 @@
         <section class="featured-products">
             <div class="container">
                 <h2 class="section-title">Bestsellers</h2>
-                <div class="products-grid">
-                    <div class="product-card">
-                        <a href="product-details.jsp">
-                            <div class="product-image" style="background-image: url('../items/Spring-Delight.jpg')"></div>
-                            <div class="product-info">
-                                <h3>Spring Delight</h3>
-                                <p class="product-price">$49.99</p>
-                            </div>
-                        </a>
-                        <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                    </div>
-                    <div class="product-card">
-                        <a href="product-details.jsp">
-                            <div class="product-image" style="background-image: url('../items/pastel.jpg')"></div>
-                            <div class="product-info">
-                                <h3>Pastel Dreams</h3>
-                                <p class="product-price">$59.99</p>
-                            </div>
-                        </a>
-                        <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                    </div>
-                    <div class="product-card">
-                        <a href="product-details.jsp">
-                            <div class="product-image" style="background-image: url('../items/elegant-r.jpg')"></div>
-                            <div class="product-info">
-                                <h3>Elegant Roses</h3>
-                                <p class="product-price">$69.99</p>
-                            </div>
-                        </a>
-                        <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                    </div>
-                    <div class="product-card">
-                        <a href="product-details.jsp">
-                            <div class="product-image" style="background-image: url('../items/lavender haze.jpg')"></div>
-                            <div class="product-info">
-                                <h3>Lavender Haze</h3>
-                                <p class="product-price">$89.99</p>
-                            </div>
-                        </a>
-                        <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                    </div>
+                <!-- Error/Success Messages -->
+                    <c:if test="${not empty successMessage}">
+                        <div class="alert alert-success">${successMessage}</div>
+                    </c:if>
+                    
+                    <c:if test="${not empty errorMessage}">
+                        <div class="alert alert-danger">${errorMessage}</div>
+                    </c:if>
+                    
+                     <c:choose>
+    <c:when test="${empty featuredProducts}">
+        <div class="no-products">
+            <p>No featured products found. Please check back later.</p>
+        </div>
+    </c:when>
+    <c:otherwise>
+        <div class="products-grid">
+            <c:forEach var="product" items="${featuredProducts}" end="3">
+                <div class="product-card">
+                    <a href="${pageContext.request.contextPath}/product-details?id=${product.productId}">
+                        <div class="product-image" 
+                             style="background-image: url('${pageContext.request.contextPath}/uploads/${product.image}')">
+                             <c:if test="${empty product.image}">
+                                 <div class="no-image">No Image</div>
+                             </c:if>
+                        </div>
+                        <div class="product-info">
+                            <h3>${product.productName}</h3>
+                            <p class="product-price">$${product.price}</p>
+                        </div>
+                    </a>
                 </div>
+            </c:forEach>
+        </div>
+    </c:otherwise>
+</c:choose>
+
                 <div class="view-all">
                     <a href="products.jsp" class="btn btn-outline">View All Products</a>
                 </div>

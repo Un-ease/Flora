@@ -1,14 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details | Flora</title>
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/product-details.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/product-details.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
@@ -18,37 +19,45 @@
     <%-- Set the active page parameter --%>
 
 
-    <main>
+     <main>
         <section class="product-details-section">
             <div class="container">
                 <div class="breadcrumbs">
-                    <a href="index.jsp">Home</a> / <a href="products.jsp">Shop</a> / <span>Spring Delight</span>
+                    <a href="${pageContext.request.contextPath}/index">Home</a> / 
+                    <a href="${pageContext.request.contextPath}/products">Shop</a> / 
+                    <span>${product.productName}</span>
                 </div>
                 
                 <div class="product-details">
                     <div class="product-gallery">
                         <div class="main-image">
-                            <img src="../items/Spring-Delight.jpg">
+                            <c:choose>
+                                <c:when test="${empty product.image}">
+                                    <div class="no-image">No Image Available</div>
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="${pageContext.request.contextPath}/uploads/${product.image}" alt="${product.productName}">
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                         <div class="thumbnail-images">
                             <div class="thumbnail active">
-                                <img src="../items/Spring-Delight.jpg">
+                                <c:choose>
+                                    <c:when test="${empty product.image}">
+                                        <div class="no-image">No Image</div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="${pageContext.request.contextPath}/uploads/${product.image}" alt="${product.productName}">
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
-                            <div class="thumbnail">
-                                <img src="../items/Spring-Delight.jpg">
-                            </div>
-                            <div class="thumbnail">
-                                <img src="../items/Spring-Delight.jpg">
-                            </div>
-                            <div class="thumbnail">
-                                <img src="../items/Spring-Delight.jpg">
-                            </div>
+                            <!-- For now, we only have one image per product -->
                         </div>
                     </div>
                     
                     <div class="product-info">
-                        <h1>Spring Delight</h1>
-                        <div class="product-price">$49.99</div>
+                        <h1>${product.productName}</h1>
+                        <div class="product-price">$${product.price}</div>
                         <div class="product-rating">
                             <div class="stars">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
@@ -61,22 +70,22 @@
                         </div>
                         
                         <div class="product-short-description">
-                            <p>A beautiful arrangement of fresh spring flowers including tulips, daffodils, and hyacinths. This vibrant bouquet brings the joy of spring into any space with its cheerful colors and delightful fragrance.</p>
-                        <ul class="product-features">
-                            <li>Hand-arranged by our expert florists</li>
-                            <li>Includes seasonal spring flowers</li>
-                            <li>Arrives in a decorative vase</li>
-                            <li>Guaranteed fresh for 7 days</li>
-                        </ul>
+                            <p>${product.productDescription}</p>
+                            <ul class="product-features">
+                                <li>Hand-arranged by our expert florists</li>
+                                <li>Includes premium seasonal flowers</li>
+                                <li>Arrives in a decorative vase</li>
+                                <li>Guaranteed fresh for 7 days</li>
+                            </ul>
                         </div>
                         
                         <div class="product-actions">
                             <div class="quantity-selector">
                                 <button class="quantity-btn decrease">-</button>
-                                <input type="number" value="1" min="1" class="quantity-input">
+                                <input type="number" value="1" min="1" max="${product.quantity}" class="quantity-input">
                                 <button class="quantity-btn increase">+</button>
                             </div>
-                            <button class="btn btn-primary add-to-cart-btn">Add to Cart</button>
+                            <button class="btn btn-primary add-to-cart-btn" data-product-id="${product.productId}">Add to Cart</button>
                             <button class="btn-wishlist">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                             </button>
@@ -85,15 +94,12 @@
                         <div class="product-meta">
                             <div class="meta-item">
                                 <span class="meta-label">SKU:</span>
-                                <span class="meta-value">FL-SD-001</span>
+                                <span class="meta-value">FL-${product.productId}</span>
                             </div>
+                           
                             <div class="meta-item">
-                                <span class="meta-label">Categories:</span>
-                                <span class="meta-value">Spring Collection, Bouquets</span>
-                            </div>
-                            <div class="meta-item">
-                                <span class="meta-label">Tags:</span>
-                                <span class="meta-value">Spring, Tulips, Daffodils</span>
+                                <span class="meta-label">Stock:</span>
+                                <span class="meta-value">${product.quantity > 0 ? 'In Stock' : 'Out of Stock'}</span>
                             </div>
                         </div>
                         
@@ -119,57 +125,33 @@
             </div>
         </section>
         
-        <section class="related-products">
+         <section class="related-products">
             <div class="container">
                 <h2>You May Also Like</h2>
                 <div class="products-grid">
-                    <!-- Related Product 1 -->
-                    <div class="product-card">
-                        <a href="product-details.jsp">
-                            <div class="product-image" style="background-image: url('/placeholder.svg?height=400&width=400')"></div>
-                            <div class="product-info">
-                                <h3>Pastel Dreams</h3>
-                                <p class="product-price">$59.99</p>
-                            </div>
-                        </a>
-                        <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                    </div>
-                    
-                    <!-- Related Product 2 -->
-                    <div class="product-card">
-                        <a href="product-details.jsp">
-                            <div class="product-image" style="background-image: url('/placeholder.svg?height=400&width=400')"></div>
-                            <div class="product-info">
-                                <h3>Elegant Roses</h3>
-                                <p class="product-price">$69.99</p>
-                            </div>
-                        </a>
-                        <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                    </div>
-                    
-                    <!-- Related Product 3 -->
-                    <div class="product-card">
-                        <a href="product-details.jsp">
-                            <div class="product-image" style="background-image: url('/placeholder.svg?height=400&width=400')"></div>
-                            <div class="product-info">
-                                <h3>Sunshine Bouquet</h3>
-                                <p class="product-price">$45.99</p>
-                            </div>
-                        </a>
-                        <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                    </div>
-                    
-                    <!-- Related Product 4 -->
-                    <div class="product-card">
-                        <a href="product-details.jsp">
-                            <div class="product-image" style="background-image: url('/placeholder.svg?height=400&width=400')"></div>
-                            <div class="product-info">
-                                <h3>Lavender Love</h3>
-                                <p class="product-price">$55.99</p>
-                            </div>
-                        </a>
-                        <button class="btn btn-secondary add-to-cart">Add to Cart</button>
-                    </div>
+                    <c:choose>
+                        <c:when test="${empty similarProducts}">
+                            <p>No similar products available at this time.</p>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach var="similarProduct" items="${similarProducts}">
+                                <div class="product-card">
+                                    <a href="${pageContext.request.contextPath}/product-details?id=${similarProduct.productId}">
+                                        <div class="product-image" style="background-image: url('${pageContext.request.contextPath}/uploads/${similarProduct.image}')">
+                                            <c:if test="${empty similarProduct.image}">
+                                                <div class="no-image">No Image</div>
+                                            </c:if>
+                                        </div>
+                                        <div class="product-info">
+                                            <h3>${similarProduct.productName}</h3>
+                                            <p class="product-price">$${similarProduct.price}</p>
+                                        </div>
+                                    </a>
+                                    <button class="btn btn-secondary add-to-cart" data-product-id="${similarProduct.productId}">Add to Cart</button>
+                                </div>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </section>
@@ -201,6 +183,7 @@
             const decreaseBtn = document.querySelector('.quantity-btn.decrease');
             const increaseBtn = document.querySelector('.quantity-btn.increase');
             const quantityInput = document.querySelector('.quantity-input');
+            const maxQuantity = ${product.quantity};
             
             decreaseBtn.addEventListener('click', function() {
                 let value = parseInt(quantityInput.value);
@@ -211,9 +194,44 @@
             
             increaseBtn.addEventListener('click', function() {
                 let value = parseInt(quantityInput.value);
-                quantityInput.value = value + 1;
+                if (value < maxQuantity) {
+                    quantityInput.value = value + 1;
+                }
+            });
+            
+            // Ensure quantity doesn't exceed stock
+            quantityInput.addEventListener('change', function() {
+                let value = parseInt(this.value);
+                if (value < 1) {
+                    this.value = 1;
+                } else if (value > maxQuantity) {
+                    this.value = maxQuantity;
+                }
+            });
+            
+            // Add to cart functionality can be added here
+            const addToCartBtn = document.querySelector('.add-to-cart-btn');
+            addToCartBtn.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                const quantity = parseInt(quantityInput.value);
+                
+                // Here you would add code to add the product to the cart
+                // For example, using fetch to call a cart API endpoint
+                alert(`Added ${quantity} of product #${productId} to cart!`);
+            });
+            
+            // Add to cart buttons on similar products
+            const similarAddToCartBtns = document.querySelectorAll('.products-grid .add-to-cart');
+            similarAddToCartBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-product-id');
+                    
+                    // Add product to cart with quantity 1
+                    alert(`Added product #${productId} to cart!`);
+                });
             });
         });
     </script>
+
 </body>
 </html>

@@ -47,13 +47,7 @@
             <div class="container">
                 <h2 class="section-title">Bestsellers</h2>
                 <!-- Error/Success Messages -->
-                    <c:if test="${not empty successMessage}">
-                        <div class="alert alert-success">${successMessage}</div>
-                    </c:if>
-                    
-                    <c:if test="${not empty errorMessage}">
-                        <div class="alert alert-danger">${errorMessage}</div>
-                    </c:if>
+      
                     
                     <c:choose>
 					    <c:when test="${empty featuredProducts}">
@@ -66,8 +60,7 @@
 					            <c:forEach var="product" items="${featuredProducts}" end="3">
 					                <div class="product-card">
 					                    <a href="${pageContext.request.contextPath}/product-details?id=${product.productId}">
-					                        <div class="product-image" 
-					                             style="background-image: url('${pageContext.request.contextPath}/uploads/${product.image}')">
+					                        <div class="product-image" style="background-image: url('${pageContext.request.contextPath}/uploads/${product.image}')">
 					                             <c:if test="${empty product.image}">
 					                                 <div class="no-image">No Image</div>
 					                             </c:if>

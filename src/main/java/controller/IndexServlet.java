@@ -35,7 +35,7 @@ public class IndexServlet extends HttpServlet {
         String path = request.getServletPath();
         
         // Handle static resources properly
-        if (path.startsWith("/css/") || path.startsWith("/js/") || path.startsWith("/items/")) {
+        if (path.startsWith("/css/") || path.startsWith("/js/") || path.startsWith("/items/") || path.startsWith("/uploads/")) {
             // Extract the resource name from the path
             String resourcePath = "/WEB-INF" + path;  // Adjust this if your resources are elsewhere
             String contentType = getContentTypeForResource(path);

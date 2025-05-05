@@ -21,4 +21,14 @@
         <servlet-name>default</servlet-name>
         <url-pattern>/items/*</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/uploads/*</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Context parameters for file upload -->
+    <context-param>
+        <param-name>upload.directory</param-name>
+        <param-value>uploads</param-value>
+    </context-param>
 </web-app>

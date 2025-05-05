@@ -30,7 +30,8 @@ public class SessionFilter extends HttpFilter implements Filter {
         "/css/",
         "/pages/js/",
         "/items/",
-        "/index"
+        "/index",
+        "/uploads/"
     };
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)

@@ -65,20 +65,12 @@
                         </div>
                     </div>
                     
-                    <!-- Error/Success Messages -->
-                    <c:if test="${not empty successMessage}">
-                        <div class="alert alert-success">${successMessage}</div>
-                    </c:if>
-                    
-                    <c:if test="${not empty errorMessage}">
-                        <div class="alert alert-danger">${errorMessage}</div>
-                    </c:if>
-                    
+                   
                      <c:choose>
 					    <c:when test="${empty products}">
 					        <div class="no-products">
 					            <p>No products found. Please check back later.</p>
-					            <p>Debug: products attribute is empty or null</p>
+					            
 					        </div>
 					    </c:when>
 					    <c:otherwise>

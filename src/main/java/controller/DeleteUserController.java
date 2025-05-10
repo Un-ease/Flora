@@ -38,25 +38,24 @@ public class DeleteUserController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        
-        try {
-            int userId = Integer.parseInt(request.getParameter("userId"));
-            
-            UserDAO userDAO = new UserDAO();
-            boolean isDeleted = userDAO.deleteUser(userId);
-            
-            if (isDeleted) {
-                request.getSession().setAttribute("successMessage", "User deleted successfully!");
-            } else {
-                request.getSession().setAttribute("errorMessage", "Failed to delete user");
-            }
-            
-            response.sendRedirect(request.getContextPath() + "/pages/admin-dashboard.jsp?section=users");
-            
-        } catch (Exception e) {
-            request.getSession().setAttribute("errorMessage", "Error: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/pages/admin-dashboard.jsp?section=users");
-        }
-    }
+        String userIDParam = request.getParameter("userID");
+		try{
+			if (userIDParam == null || userIDParam.isEmpty()){
+				response.sendRedirect(request.getContextPath()+ "/pages/admin-dashboard.jsp");
+				System.out.println("userID"+userIDParam);
+				return;
+			}
+
+			int userID = Integer.parseInt(userIDParam);
+			UserDAO userDAO = new UserDAO();
+			userDAO.deleteUser(userID);
+			response.sendRedirect(request.getContextPath() + "/pages/admin-dashboard.jsp#users-section");
+		            
+		    } catch (NumberFormatException | SQLException | ClassNotFoundException e) {
+		            // On any error, just redirect back
+		            response.sendRedirect(request.getContextPath() + "/pages/admin-dashboard.jsp?#users-section");
+		        }
+		}
+    
 
 }

@@ -36,15 +36,11 @@ public class ProductDAO {
         }
     }
     
-    public boolean deleteProduct(int productID) throws SQLException {
-        String query = "DELETE FROM Products WHERE product_ID = ?";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setInt(1, productID);
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            System.out.println("SQL Error: " + e.getMessage());
-            throw e;
+    public boolean deleteProduct(int productId) throws SQLException {
+        String query = "DELETE FROM products WHERE product_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, productId);
+            return stmt.executeUpdate() > 0;
         }
     }
      

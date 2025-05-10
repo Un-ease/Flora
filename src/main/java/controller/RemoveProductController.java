@@ -44,7 +44,7 @@ public class RemoveProductController extends HttpServlet {
             boolean isDeleted = productDAO.deleteProduct(productID);
 
             if (isDeleted) {
-                response.sendRedirect("success.jsp?message=Product deleted successfully");
+                response.sendRedirect("/pages/admin-dashboard.jsp");
             } else {
                 response.sendRedirect("error.jsp?message=Failed to delete product. Product not found.");
             }
@@ -57,5 +57,29 @@ public class RemoveProductController extends HttpServlet {
 			e.printStackTrace();
 		}
     }
+    
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        
+        String productIDParam = request.getParameter("productID");
 
+        try {
+            // Basic validation
+            if (productIDParam == null || productIDParam.isEmpty()) {
+                response.sendRedirect(request.getContextPath() + "/pages/admin-dashboard.jsp#products-section");
+                return;
+            }
+
+            int productID = Integer.parseInt(productIDParam);
+            ProductDAO productDAO = new ProductDAO();
+            productDAO.deleteProduct(productID);
+            
+            // Redirect back to products section
+            response.sendRedirect(request.getContextPath() + "/pages/admin-dashboard.jsp#products-section");
+            
+        } catch (NumberFormatException | SQLException | ClassNotFoundException e) {
+            // On any error, just redirect back
+            response.sendRedirect(request.getContextPath() + "/pages/admin-dashboard.jsp#products-section");
+        }
+    }
 }

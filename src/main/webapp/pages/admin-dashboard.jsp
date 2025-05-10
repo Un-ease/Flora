@@ -15,7 +15,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Flora</title>
-    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -223,126 +223,34 @@
                                     <th>Product ID</th>
                                     <th>Image</th>
                                     <th>Name</th>
-                                    <th>Category</th>
                                     <th>Price</th>
                                     <th>Stock</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>#P001</td>
-                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Red Rose Bouquet" class="product-thumbnail"></td>
-                                    <td>Red Rose Bouquet</td>
-                                    <td>Roses</td>
-                                    <td>$29.99</td>
-                                    <td>15</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small" onclick="editProduct('P001', 'Red Rose Bouquet', 'Roses', 29.99, 15, 'A stunning bouquet of a dozen fresh red roses.')">Edit</button>
-                                            <button class="btn-small" onclick="deleteProduct('P001')">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#P002</td>
-                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Tulip Arrangement" class="product-thumbnail"></td>
-                                    <td>Tulip Arrangement</td>
-                                    <td>Tulips</td>
-                                    <td>$24.99</td>
-                                    <td>8</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small" onclick="editProduct('P002', 'Tulip Arrangement', 'Tulips', 24.99, 8, 'Beautiful arrangement of fresh tulips.')">Edit</button>
-                                            <button class="btn-small" onclick="deleteProduct('P002')">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#P003</td>
-                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Lily Bouquet" class="product-thumbnail"></td>
-                                    <td>Lily Bouquet</td>
-                                    <td>Lilies</td>
-                                    <td>$34.99</td>
-                                    <td>12</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small" onclick="editProduct('P003', 'Lily Bouquet', 'Lilies', 34.99, 12, 'Elegant white lilies arranged in a bouquet.')">Edit</button>
-                                            <button class="btn-small" onclick="deleteProduct('P003')">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#P004</td>
-                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Sunflower Bunch" class="product-thumbnail"></td>
-                                    <td>Sunflower Bunch</td>
-                                    <td>Sunflowers</td>
-                                    <td>$19.99</td>
-                                    <td>20</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small" onclick="editProduct('P004', 'Sunflower Bunch', 'Sunflowers', 19.99, 20, 'Bright and cheerful sunflowers.')">Edit</button>
-                                            <button class="btn-small" onclick="deleteProduct('P004')">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#P005</td>
-                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Orchid Plant" class="product-thumbnail"></td>
-                                    <td>Orchid Plant</td>
-                                    <td>Plants</td>
-                                    <td>$45.99</td>
-                                    <td>5</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small" onclick="editProduct('P005', 'Orchid Plant', 'Plants', 45.99, 5, 'Beautiful potted orchid plant.')">Edit</button>
-                                            <button class="btn-small" onclick="deleteProduct('P005')">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#P006</td>
-                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Mixed Bouquet" class="product-thumbnail"></td>
-                                    <td>Mixed Bouquet</td>
-                                    <td>Bouquets</td>
-                                    <td>$39.99</td>
-                                    <td>10</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small" onclick="editProduct('P006', 'Mixed Bouquet', 'Bouquets', 39.99, 10, 'Colorful mix of seasonal flowers.')">Edit</button>
-                                            <button class="btn-small" onclick="deleteProduct('P006')">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#P007</td>
-                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Daisy Arrangement" class="product-thumbnail"></td>
-                                    <td>Daisy Arrangement</td>
-                                    <td>Daisies</td>
-                                    <td>$22.99</td>
-                                    <td>15</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small" onclick="editProduct('P007', 'Daisy Arrangement', 'Daisies', 22.99, 15, 'Fresh daisies in a decorative pot.')">Edit</button>
-                                            <button class="btn-small" onclick="deleteProduct('P007')">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#P008</td>
-                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Lavender Bundle" class="product-thumbnail"></td>
-                                    <td>Lavender Bundle</td>
-                                    <td>Lavender</td>
-                                    <td>$18.99</td>
-                                    <td>25</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small" onclick="editProduct('P008', 'Lavender Bundle', 'Lavender', 18.99, 25, 'Fragrant dried lavender bundle.')">Edit</button>
-                                            <button class="btn-small" onclick="deleteProduct('P008')">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
+							    <c:forEach items="${products}" var="product">
+							        <tr>
+							            <td>#${product.productId}</td>
+							            <td><img src="${pageContext.request.contextPath}/uploads/${product.image}" class="product-thumbnail"></td>
+							            <td>${product.productName}</td>
+							            <td>$ ${product.price}</td>
+							            <td>${product.quantity}</td>
+							            <td>
+							                <div class="action-buttons">
+							                    <button class="btn-small" onclick="editProduct(${product.productId}, '${product.productName}', ${product.price}, ${product.quantity}, '${product.productDescription}')">Edit</button>
+							                    <form action="${pageContext.request.contextPath}/RemoveProductController" method="post" style="display:inline;">
+												    <input type="hidden" name="productID" value="${product.productId}">
+												    <button type="submit" class="btn-small" 
+												            onclick="return confirm('Are you sure you want to delete this product?')">
+												        Delete
+												    </button>
+												</form>
+							                </div>
+							            </td>
+							        </tr>
+							    </c:forEach>
+							</tbody>
                         </table>
                     </div>
                 </div>
@@ -453,12 +361,8 @@
                         <form class="admin-form" id="userForm" action="${pageContext.request.contextPath}/AddUserController" method="post">
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="user-firstname">First Name</label>
-                                    <input type="text" id="user-firstname" name="firstName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="user-lastname">Last Name</label>
-                                    <input type="text" id="user-lastname" name="lastName" required>
+                                    <label for="user-fullname">Full Name</label>
+                                    <input type="text" id="user-fullname" name="fullname" required>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -466,23 +370,21 @@
                                     <label for="user-email">Email</label>
                                     <input type="email" id="user-email" name="email" required>
                                 </div>
-                                <div class="form-group">
-                                    <label for="user-phone">Phone</label>
-                                    <input type="tel" id="user-phone" name="phone">
-                                </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="user-password">Password</label>
                                     <input type="password" id="user-password" name="password" required>
                                 </div>
+                            </div>
+                            <div class="form-row">
                                 <div class="form-group">
                                     <label for="user-role">Role</label>
-                                    <select id="user-role" name="role">
-                                        <option value="customer">Customer</option>
-                                        <option value="admin">Admin</option>
-                                    </select>
-                                </div>
+                                        <select id="user-role" name="role">
+                                            <option value="customer">Customer</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                </div>  
                             </div>
                             <div class="form-actions">
                                 <button type="submit" class="btn">Add User</button>
@@ -504,12 +406,8 @@
                             <input type="hidden" id="edit-user-id" name="userId">
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="edit-user-firstname">First Name</label>
-                                    <input type="text" id="edit-user-firstname" name="firstName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="edit-user-lastname">Last Name</label>
-                                    <input type="text" id="edit-user-lastname" name="lastName" required>
+                                    <label for="edit-user-fullname">Full Name</label>
+                                    <input type="text" id="edit-user-fullname" name="fullname" required>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -517,23 +415,21 @@
                                     <label for="edit-user-email">Email</label>
                                     <input type="email" id="edit-user-email" name="email" required>
                                 </div>
-                                <div class="form-group">
-                                    <label for="edit-user-phone">Phone</label>
-                                    <input type="tel" id="edit-user-phone" name="phone">
-                                </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="edit-user-password">Password</label>
                                     <input type="password" id="edit-user-password" name="password" placeholder="Leave blank to keep current password">
                                 </div>
-                                <div class="form-group">
-                                    <label for="edit-user-role">Role</label>
-                                    <select id="edit-user-role" name="role">
-                                        <option value="customer">Customer</option>
-                                        <option value="admin">Admin</option>
-                                    </select>
-                                </div>
+                            </div>
+                            <div class="form-row">
+	                            <div class="form-group">
+	                                    <label for="edit-user-role">Role</label>
+	                                    <select id="edit-user-role" name="role">
+	                                        <option value="customer">Customer</option>
+	                                        <option value="admin">Admin</option>
+	                                    </select>
+	                                </div>
                             </div>
                             <div class="form-actions">
                                 <button type="submit" class="btn">Update User</button>
@@ -549,84 +445,29 @@
                                     <th>User ID</th>
                                     <th>Name</th>
                                     <th>Email</th>
-                                    <th>Phone</th>
                                     <th>Role</th>
-                                    <th>Joined Date</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>#U001</td>
-                                    <td>John Smith</td>
-                                    <td>john.smith@example.com</td>
-                                    <td>(555) 123-4567</td>
-                                    <td>Customer</td>
-                                    <td>Jan 15, 2025</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small" onclick="editUser('U001', 'John', 'Smith', 'john.smith@example.com', '(555) 123-4567', 'customer')">Edit</button>
-                                            <button class="btn-small" onclick="deleteUser('U001')">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#U002</td>
-                                    <td>Sarah Johnson</td>
-                                    <td>sarah.j@example.com</td>
-                                    <td>(555) 987-6543</td>
-                                    <td>Customer</td>
-                                    <td>Feb 3, 2025</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small" onclick="editUser('U002', 'Sarah', 'Johnson', 'sarah.j@example.com', '(555) 987-6543', 'customer')">Edit</button>
-                                            <button class="btn-small" onclick="deleteUser('U002')">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#U003</td>
-                                    <td>Michael Brown</td>
-                                    <td>michael.b@example.com</td>
-                                    <td>(555) 456-7890</td>
-                                    <td>Admin</td>
-                                    <td>Jan 5, 2025</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small" onclick="editUser('U003', 'Michael', 'Brown', 'michael.b@example.com', '(555) 456-7890', 'admin')">Edit</button>
-                                            <button class="btn-small" onclick="deleteUser('U003')">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#U004</td>
-                                    <td>Emily Davis</td>
-                                    <td>emily.d@example.com</td>
-                                    <td>(555) 234-5678</td>
-                                    <td>Customer</td>
-                                    <td>Mar 12, 2025</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small" onclick="editUser('U004', 'Emily', 'Davis', 'emily.d@example.com', '(555) 234-5678', 'customer')">Edit</button>
-                                            <button class="btn-small" onclick="deleteUser('U004')">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#U005</td>
-                                    <td>Admin User</td>
-                                    <td>admin@bloomandblossom.com</td>
-                                    <td>(555) 111-0000</td>
-                                    <td>Admin</td>
-                                    <td>Jan 1, 2025</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small" onclick="editUser('U005', 'Admin', 'User', 'admin@bloomandblossom.com', '(555) 111-0000', 'admin')">Edit</button>
-                                            <button class="btn-small" onclick="deleteUser('U005')">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
+							    <c:forEach items="${users}" var="user">
+							        <tr>
+							            <td>#${user.userId}</td>
+							            <td>${user.fullName}</td>
+							            <td>${user.email}</td>
+							            <td>${user.role}</td>
+							            <td>
+							                <div class="action-buttons">
+							                    <button class="btn-small" onclick="editUser(${user.userId}, '${user.fullName}', '${user.email}', '${user.role.toLowerCase()}')">Edit</button>
+							                    <form action="${pageContext.request.contextPath}/DeleteUserController" method="post" style="display:inline;">
+												    <input type="hidden" name="userID" value="${user.userId}">
+												    <button type="submit" class="btn-small" onclick="return confirm('Delete this user?')">Delete</button>
+												</form>
+							                </div>
+							            </td>
+							        </tr>
+							    </c:forEach>
+							</tbody>
                         </table>
                     </div>
                 </div>
@@ -824,7 +665,7 @@
 
     <footer class="admin-footer">
         <div class="container">
-            <p>&copy; 2025 Bloom & Blossom Admin Panel. All rights reserved.</p>
+            <p>&copy; 2025 Flora Admin Panel. All rights reserved.</p>
         </div>
     </footer>
 
@@ -876,7 +717,7 @@
         }
         
         // Function to edit product
-        function editProduct(id, name, category, price, stock, description) {
+        function editProduct(id, name, price, stock, description) {
             // Fill the edit form with product data
             document.getElementById('edit-product-id').value = id;
             document.getElementById('edit-product-name').value = name;
@@ -897,13 +738,11 @@
         }
         
         // Function to edit user
-        function editUser(id, firstName, lastName, email, phone, role) {
+        function editUser(userId, fullname, email, role) {
             // Fill the edit form with user data
-            document.getElementById('edit-user-id').value = id;
-            document.getElementById('edit-user-firstname').value = firstName;
-            document.getElementById('edit-user-lastname').value = lastName;
+            document.getElementById('edit-user-id').value = userId;
+            document.getElementById('edit-user-fullname').value = fullname;
             document.getElementById('edit-user-email').value = email;
-            document.getElementById('edit-user-phone').value = phone;
             document.getElementById('edit-user-role').value = role;
             
             // Show the edit form
@@ -931,34 +770,8 @@
                 }
             });
             
-            // Set up form submissions
-            document.getElementById('productForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                // In a real application, this would send the form data to the server
-                alert('Product added successfully!');
-            });
-            
-            document.getElementById('editProductForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                // In a real application, this would send the form data to the server
-                alert('Product updated successfully!');
-                toggleForm('edit-product-form');
-            });
-            
-            document.getElementById('userForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                // In a real application, this would send the form data to the server
-                alert('User added successfully!');
-                toggleForm('add-user-form');
-            });
-            
-            document.getElementById('editUserForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                // In a real application, this would send the form data to the server
-                alert('User updated successfully!');
-                toggleForm('edit-user-form');
-            });
+           
         });
-    </script>
+    </script>	
 </body>
 </html>

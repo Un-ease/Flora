@@ -41,8 +41,7 @@ public class EditUserController extends HttpServlet {
         
         try {
             int userId = Integer.parseInt(request.getParameter("userId"));
-            String firstName = request.getParameter("firstName");
-            String lastName = request.getParameter("lastName");
+            String fullName = request.getParameter("fullname");
             String email = request.getParameter("email");
             String phone = request.getParameter("phone");
             String role = request.getParameter("role");
@@ -51,7 +50,7 @@ public class EditUserController extends HttpServlet {
             // Create user object
             User user = new User();
             user.setUserId(userId);
-            user.setFullName(firstName + " " + lastName);
+            user.setFullName(fullName);
             user.setEmail(email);
             user.setRole(role);
             

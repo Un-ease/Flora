@@ -133,13 +133,14 @@ public class UserDAO {
         }
     }
 
-    public boolean deleteUser(int userId) throws SQLException, ClassNotFoundException {
-        String query = "DELETE FROM users WHERE user_id = ?";
+    public boolean deleteUser(int userID) throws SQLException, ClassNotFoundException {
+    	System.out.println("Attempting to delete user ID: " + userID);
+    	String query = "DELETE FROM users WHERE user_id = ?";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             
-            ps.setInt(1, userId);
+            ps.setInt(1, userID);
             return ps.executeUpdate() > 0;
         }
     }
@@ -153,13 +154,13 @@ public class UserDAO {
              ResultSet rs = ps.executeQuery()) {
             
             while (rs.next()) {
-                User user = new User(
-                    rs.getInt("user_id"),
-                    rs.getString("full_name"),
-                    rs.getString("email"),
-                    null, // Don't retrieve password hash
-                    rs.getString("role")
-                );
+                User user = new User();
+                user.setUserId(rs.getInt("user_id"));  // Using setter instead of constructor
+                user.setFullName(rs.getString("full_name"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                // Password is intentionally not set
+                
                 users.add(user);
             }
         }

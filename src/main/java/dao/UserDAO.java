@@ -1,6 +1,8 @@
 package dao;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import model.User;
 import org.mindrot.jbcrypt.BCrypt;
@@ -101,5 +103,89 @@ public class UserDAO {
         }
         
         return emailExists;
+    }
+    public boolean updateUser(User user) throws SQLException, ClassNotFoundException {
+        Objects.requireNonNull(user, "User cannot be null");
+        
+        String query;
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            query = "UPDATE users SET full_name = ?, email = ?, password_hash = ?, role = ? WHERE user_id = ?";
+        } else {
+            query = "UPDATE users SET full_name = ?, email = ?, role = ? WHERE user_id = ?";
+        }
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            
+            int paramIndex = 1;
+            ps.setString(paramIndex++, user.getFullName());
+            ps.setString(paramIndex++, user.getEmail());
+            
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+                ps.setString(paramIndex++, hashedPassword);
+            }
+            
+            ps.setString(paramIndex++, user.getRole());
+            ps.setInt(paramIndex, user.getUserId());
+            
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public boolean deleteUser(int userId) throws SQLException, ClassNotFoundException {
+        String query = "DELETE FROM users WHERE user_id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            
+            ps.setInt(1, userId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public List<User> getAllUsers() throws SQLException, ClassNotFoundException {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM users";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                User user = new User(
+                    rs.getInt("user_id"),
+                    rs.getString("full_name"),
+                    rs.getString("email"),
+                    null, // Don't retrieve password hash
+                    rs.getString("role")
+                );
+                users.add(user);
+            }
+        }
+        return users;
+    }
+
+    public User getUserById(int userId) throws SQLException, ClassNotFoundException {
+        String query = "SELECT * FROM users WHERE user_id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            
+            ps.setInt(1, userId);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                        rs.getInt("user_id"),
+                        rs.getString("full_name"),
+                        rs.getString("email"),
+                        null, // Don't retrieve password hash
+                        rs.getString("role")
+                    );
+                }
+            }
+        }
+        return null;
     }
 }

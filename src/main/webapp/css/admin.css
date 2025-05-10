@@ -687,12 +687,25 @@ footer {
   font-weight: 500;
 }
 
-.form-group input {
+.form-group input,
+.form-group select,
+.form-group textarea {
   width: 100%;
   padding: 12px;
   border: 1px solid var(--border);
   border-radius: 4px;
   font-size: 16px;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-note {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 5px;
 }
 
 .form-options {
@@ -717,10 +730,8 @@ footer {
 
 .form-actions {
   margin-top: 30px;
-}
-
-.form-actions .btn {
-  width: 100%;
+  display: flex;
+  gap: 15px;
 }
 
 .auth-divider {
@@ -1124,37 +1135,45 @@ footer {
   gap: 20px;
 }
 
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+.admin-form-container {
+  background-color: var(--background-light);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
-.form-group label {
+.admin-section-container {
+  display: none;
+}
+
+.active-section {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid var(--border);
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
   border-radius: 4px;
-  font-size: 16px;
 }
 
-.form-group textarea {
-  resize: vertical;
-  min-height: 100px;
+.alert-success {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
 }
 
-.form-actions {
-  display: flex;
-  gap: 15px;
-  margin-top: 10px;
+.alert-danger {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+
+.product-thumbnail {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
 }
 
 .admin-footer {

@@ -123,5 +123,25 @@ public class ProductDAO {
         return null; // Return null if product not found
     }
     
-    
+    public boolean updateProduct(Product product) throws SQLException {
+        Objects.requireNonNull(product, "Product cannot be null");
+        
+        String query = "UPDATE Products SET product_name = ?, product_description = ?, price = ?, " +
+                       "image = ?, stock_quantity = ? WHERE product_id = ?";
+        
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, product.getProductName());
+            ps.setString(2, product.getProductDescription());
+            ps.setDouble(3, product.getPrice());
+            ps.setString(4, product.getImage());
+            ps.setInt(5, product.getQuantity());
+            ps.setInt(6, product.getProductId());
+            
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating product: " + e.getMessage());
+            throw e;
+        }
+    }
 }

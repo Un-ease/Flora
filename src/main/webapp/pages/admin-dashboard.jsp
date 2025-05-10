@@ -1,34 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<jsp:useBean id="productDAO" class="dao.ProductDAO" scope="request"/>
+<jsp:useBean id="userDAO" class="dao.UserDAO" scope="request"/>
+
+<c:set var="products" value="${productDAO.allProducts}" scope="request"/>
+<c:set var="users" value="${userDAO.allUsers}" scope="request"/>
+
+<c:set var="activeSection" value="${not empty param.section ? param.section : 'dashboard'}" scope="request"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Flora</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
+    <link rel="stylesheet" href="../css/admin.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-	<style>
-	.alert {
-	    padding: 15px;
-	    margin-bottom: 20px;
-	    border: 1px solid transparent;
-	    border-radius: 4px;
-	}
-	.alert-success {
-	    color: #3c763d;
-	    background-color: #dff0d8;
-	    border-color: #d6e9c6;
-	}
-	.alert-danger {
-	    color: #a94442;
-	    background-color: #f2dede;
-	    border-color: #ebccd1;
-	}
-</style>
 </head>
 <body class="admin-body">
     <header class="admin-header">
@@ -41,10 +31,10 @@
             <div class="admin-header-right">
                 <div class="admin-user">
                     <span>Admin User</span>
-    <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
-    <form id="logoutForm" action="${pageContext.request.contextPath}/LogOutController" method="get" style="display:none;">
-        <input type="hidden" name="csrfToken" value="${csrfToken}">
-    </form>
+                    <a href="index.jsp" id="logout-link">Logout</a>
+                    <form id="logoutForm" action="${pageContext.request.contextPath}/" method="get" style="display:none;">
+                        <!-- Hidden form for logout functionality -->
+                    </form>
                 </div>
             </div>
         </div>
@@ -54,170 +44,781 @@
         <aside class="admin-sidebar">
             <nav class="admin-nav">
                 <ul>
-                    <li><a href="#" class="active">Dashboard</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Orders</a></li>
-                    <li><a href="#">Customers</a></li>
-                    <li><a href="#">Reports</a></li>
-                    <li><a href="#">Settings</a></li>
+                    <li><a href="#dashboard-section" class="active" onclick="showSection('dashboard-section')">Dashboard</a></li>
+                    <li><a href="#products-section" onclick="showSection('products-section')">Products</a></li>
+                    <li><a href="#users-section" onclick="showSection('users-section')">Users</a></li>
+                    <li><a href="#orders-section" onclick="showSection('orders-section')">Orders</a></li>
+                    <li><a href="#reports-section" onclick="showSection('reports-section')">Reports</a></li>
                 </ul>
             </nav>
         </aside>
         
         <main class="admin-content">
-            <div class="admin-page-header">
-                <h2>Admin Dashboard</h2>
-                <p>Welcome to your admin panel</p>
-            </div>
-            
-            <div class="admin-stats">
-                <div class="admin-stat-card">
-                    <h3>Total Products</h3>
-                    <p class="stat-number">24</p>
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="admin-section-container active-section">
+                <div class="admin-page-header">
+                    <h2>Admin Dashboard</h2>
+                    <p>Welcome to your Admin Panel</p>
                 </div>
-                <div class="admin-stat-card">
-                    <h3>Total Orders</h3>
-                    <p class="stat-number">156</p>
+                
+                <div class="admin-stats">
+                    <div class="admin-stat-card">
+                        <h3>Total Products</h3>
+                        <p class="stat-number">24</p>
+                    </div>
+                    <div class="admin-stat-card">
+                        <h3>Total Orders</h3>
+                        <p class="stat-number">156</p>
+                    </div>
+                    <div class="admin-stat-card">
+                        <h3>Total Customers</h3>
+                        <p class="stat-number">89</p>
+                    </div>
+                    <div class="admin-stat-card">
+                        <h3>Active Users</h3>
+                        <p class="stat-number">42</p>
+                    </div>
                 </div>
-                <div class="admin-stat-card">
-                    <h3>Total Customers</h3>
-                    <p class="stat-number">89</p>
+                
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h3>Recent Orders</h3>
+                        <a href="#orders-section" class="btn-small" onclick="showSection('orders-section')">View All</a>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Total</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#1005</td>
+                                    <td>John Smith</td>
+                                    <td>April 18, 2025</td>
+                                    <td><span class="status pending">Pending</span></td>
+                                    <td>$65.99</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="#" class="btn-small">View</a>
+                                            <a href="#" class="btn-small">Edit</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#1004</td>
+                                    <td>Sarah Johnson</td>
+                                    <td>April 17, 2025</td>
+                                    <td><span class="status shipped">Shipped</span></td>
+                                    <td>$29.99</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="#" class="btn-small">View</a>
+                                            <a href="#" class="btn-small">Edit</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#1003</td>
+                                    <td>Michael Brown</td>
+                                    <td>April 16, 2025</td>
+                                    <td><span class="status completed">Completed</span></td>
+                                    <td>$45.98</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="#" class="btn-small">View</a>
+                                            <a href="#" class="btn-small">Edit</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="admin-stat-card">
-                    <h3>Revenue</h3>
-                    <p class="stat-number">$4,285</p>
+                
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h3>Recent Products</h3>
+                        <a href="#products-section" class="btn-small" onclick="showSection('products-section')">View All</a>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Product ID</th>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#P001</td>
+                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Red Rose Bouquet" class="product-thumbnail"></td>
+                                    <td>Red Rose Bouquet</td>
+                                    <td>$29.99</td>
+                                    <td>15</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="#" class="btn-small">Edit</a>
+                                            <a href="#" class="btn-small">Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#P002</td>
+                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Tulip Arrangement" class="product-thumbnail"></td>
+                                    <td>Tulip Arrangement</td>
+                                    <td>$24.99</td>
+                                    <td>8</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="#" class="btn-small">Edit</a>
+                                            <a href="#" class="btn-small">Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#P003</td>
+                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Lily Bouquet" class="product-thumbnail"></td>
+                                    <td>Lily Bouquet</td>
+                                    <td>$34.99</td>
+                                    <td>12</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="#" class="btn-small">Edit</a>
+                                            <a href="#" class="btn-small">Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="admin-section">
-                <div class="section-header">
-                    <h3>Recent Orders</h3>
-                    <a href="#" class="btn-small">View All</a>
+            </section>
+
+            <!-- Products Section -->
+            <section id="products-section" class="admin-section-container">
+                <div class="admin-page-header">
+                    <h2>Products Management</h2>
+                    <p>Manage your product inventory</p>
                 </div>
-                <div class="admin-table-container">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Customer</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Total</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>#1005</td>
-                                <td>John Smith</td>
-                                <td>April 18, 2025</td>
-                                <td><span class="status pending">Pending</span></td>
-                                <td>$65.99</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="#" class="btn-small">View</a>
-                                        <a href="#" class="btn-small">Edit</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#1004</td>
-                                <td>Sarah Johnson</td>
-                                <td>April 17, 2025</td>
-                                <td><span class="status shipped">Shipped</span></td>
-                                <td>$29.99</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="#" class="btn-small">View</a>
-                                        <a href="#" class="btn-small">Edit</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#1003</td>
-                                <td>Michael Brown</td>
-                                <td>April 16, 2025</td>
-                                <td><span class="status completed">Completed</span></td>
-                                <td>$45.98</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="#" class="btn-small">View</a>
-                                        <a href="#" class="btn-small">Edit</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#1002</td>
-                                <td>Jane Doe</td>
-                                <td>April 15, 2025</td>
-                                <td><span class="status pending">Pending</span></td>
-                                <td>$45.98</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="#" class="btn-small">View</a>
-                                        <a href="#" class="btn-small">Edit</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#1001</td>
-                                <td>Jane Doe</td>
-                                <td>March 28, 2025</td>
-                                <td><span class="status completed">Completed</span></td>
-                                <td>$29.99</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="#" class="btn-small">View</a>
-                                        <a href="#" class="btn-small">Edit</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h3>All Products</h3>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Product ID</th>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#P001</td>
+                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Red Rose Bouquet" class="product-thumbnail"></td>
+                                    <td>Red Rose Bouquet</td>
+                                    <td>Roses</td>
+                                    <td>$29.99</td>
+                                    <td>15</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small" onclick="editProduct('P001', 'Red Rose Bouquet', 'Roses', 29.99, 15, 'A stunning bouquet of a dozen fresh red roses.')">Edit</button>
+                                            <button class="btn-small" onclick="deleteProduct('P001')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#P002</td>
+                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Tulip Arrangement" class="product-thumbnail"></td>
+                                    <td>Tulip Arrangement</td>
+                                    <td>Tulips</td>
+                                    <td>$24.99</td>
+                                    <td>8</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small" onclick="editProduct('P002', 'Tulip Arrangement', 'Tulips', 24.99, 8, 'Beautiful arrangement of fresh tulips.')">Edit</button>
+                                            <button class="btn-small" onclick="deleteProduct('P002')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#P003</td>
+                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Lily Bouquet" class="product-thumbnail"></td>
+                                    <td>Lily Bouquet</td>
+                                    <td>Lilies</td>
+                                    <td>$34.99</td>
+                                    <td>12</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small" onclick="editProduct('P003', 'Lily Bouquet', 'Lilies', 34.99, 12, 'Elegant white lilies arranged in a bouquet.')">Edit</button>
+                                            <button class="btn-small" onclick="deleteProduct('P003')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#P004</td>
+                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Sunflower Bunch" class="product-thumbnail"></td>
+                                    <td>Sunflower Bunch</td>
+                                    <td>Sunflowers</td>
+                                    <td>$19.99</td>
+                                    <td>20</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small" onclick="editProduct('P004', 'Sunflower Bunch', 'Sunflowers', 19.99, 20, 'Bright and cheerful sunflowers.')">Edit</button>
+                                            <button class="btn-small" onclick="deleteProduct('P004')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#P005</td>
+                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Orchid Plant" class="product-thumbnail"></td>
+                                    <td>Orchid Plant</td>
+                                    <td>Plants</td>
+                                    <td>$45.99</td>
+                                    <td>5</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small" onclick="editProduct('P005', 'Orchid Plant', 'Plants', 45.99, 5, 'Beautiful potted orchid plant.')">Edit</button>
+                                            <button class="btn-small" onclick="deleteProduct('P005')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#P006</td>
+                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Mixed Bouquet" class="product-thumbnail"></td>
+                                    <td>Mixed Bouquet</td>
+                                    <td>Bouquets</td>
+                                    <td>$39.99</td>
+                                    <td>10</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small" onclick="editProduct('P006', 'Mixed Bouquet', 'Bouquets', 39.99, 10, 'Colorful mix of seasonal flowers.')">Edit</button>
+                                            <button class="btn-small" onclick="deleteProduct('P006')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#P007</td>
+                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Daisy Arrangement" class="product-thumbnail"></td>
+                                    <td>Daisy Arrangement</td>
+                                    <td>Daisies</td>
+                                    <td>$22.99</td>
+                                    <td>15</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small" onclick="editProduct('P007', 'Daisy Arrangement', 'Daisies', 22.99, 15, 'Fresh daisies in a decorative pot.')">Edit</button>
+                                            <button class="btn-small" onclick="deleteProduct('P007')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#P008</td>
+                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Lavender Bundle" class="product-thumbnail"></td>
+                                    <td>Lavender Bundle</td>
+                                    <td>Lavender</td>
+                                    <td>$18.99</td>
+                                    <td>25</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small" onclick="editProduct('P008', 'Lavender Bundle', 'Lavender', 18.99, 25, 'Fragrant dried lavender bundle.')">Edit</button>
+                                            <button class="btn-small" onclick="deleteProduct('P008')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="admin-section">
-                <div class="section-header">
-                    <h3>Add New Product</h3>
-                </div>
-                <form action="${pageContext.request.contextPath}/AddProductController" class="admin-form" method="post"  enctype="multipart/form-data">
-                    <div class="form-row">
-                    <c:if test="${not empty successMessage}">
-					    <div class="alert alert-success">${successMessage}</div>
-					</c:if>
-					<c:if test="${not empty errorMessage}">
-					    <div class="alert alert-danger">${errorMessage}</div>
-					</c:if>
-                        <div class="form-group">
-                            <label for="product-name">Product Name</label>
-                            <input type="text" id="product-name" name="productName" required>
+
+                <!-- Add the permanent Add New Product form section -->
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h3>Add New Product</h3>
+                    </div>
+                    <form class="admin-form" id="productForm"  action="${pageContext.request.contextPath}/AddProductController" method="post" enctype="multipart/form-data">
+                        <div class="alert alert-success" style="display: none;">Product added successfully!</div>
+                        <div class="alert alert-danger" style="display: none;">Error adding product. Please try again.</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="product-name">Product Name</label>
+                                <input type="text" id="product-name" name="productName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="product-price">Price ($)</label>
+                                <input type="number" id="product-price" name="price" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="product-stock">Stock Quantity</label>
+                                <input type="number" id="product-stock" name="quantity" required>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label for="product-price">Price ($)</label>
-                            <input type="number" id="product-price" name="price" step="0.01" required>
+                            <label for="product-description">Description</label>
+                            <textarea id="product-description" name="productDescription" rows="4"></textarea>
                         </div>
-                    </div>
-                    <div class="form-row">
                         <div class="form-group">
-                            <label for="product-stock">Stock Quantity</label>
-                            <input type="number" id="product-stock" name="quantity" required>
+                            <label for="product-image">Product Image</label>
+                            <input type="file" id="product-image" name="image" accept="image/*" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn">Add Product</button>
+                            <button type="reset" class="btn-outline">Reset</button>
+                        </div>
+                    </form>
+                </div>
+                    
+                <!-- Edit Product Form - Similar to User Edit Form -->
+                <div id="edit-product-form" class="admin-form-container" style="display: none;">
+                    <div class="section-header">
+                        <h3>Edit Product</h3>
+                    </div>
+                    <div class="alert alert-success" style="display: none;">Product updated successfully!</div>
+                    <div class="alert alert-danger" style="display: none;">Error updating product. Please try again.</div>
+                    
+                    <form class="admin-form" id="editProductForm" form action="${pageContext.request.contextPath}/EditProductController" method="post" enctype="multipart/form-data">
+                        <input type="hidden" id="edit-product-id" name="productId">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="edit-product-name">Product Name</label>
+                                <input type="text" id="edit-product-name" name="productName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-product-price">Price ($)</label>
+                                <input type="number" id="edit-product-price" name="price" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="edit-product-stock">Stock Quantity</label>
+                                <input type="number" id="edit-product-stock" name="quantity" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-product-description">Description</label>
+                            <textarea id="edit-product-description" name="productDescription" rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-product-image">Product Image</label>
+                            <input type="file" id="edit-product-image" name="image" accept="image/*">
+                            <p class="form-note">Leave empty to keep current image</p>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn">Update Product</button>
+                            <button type="button" class="btn-outline" onclick="toggleForm('edit-product-form')">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="users-section" class="admin-section-container">
+                <div class="admin-page-header">
+                    <h2>Users Management</h2>
+                    <p>Manage system users and customers</p>
+                </div>
+                
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h3>All Users</h3>
+                        <button class="btn-small" onclick="toggleForm('add-user-form')">Add New User</button>
+                    </div>
+                    
+                    <!-- Add User Form -->
+                    <div id="add-user-form" class="admin-form-container" style="display: none;">
+                        <div class="section-header">
+                            <h3>Add New User</h3>
+                        </div>
+                        <div class="alert alert-success" style="display: none;">User added successfully!</div>
+                        <div class="alert alert-danger" style="display: none;">Error adding user. Please try again.</div>
+                        
+                        <form class="admin-form" id="userForm" action="${pageContext.request.contextPath}/AddUserController" method="post">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="user-firstname">First Name</label>
+                                    <input type="text" id="user-firstname" name="firstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="user-lastname">Last Name</label>
+                                    <input type="text" id="user-lastname" name="lastName" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="user-email">Email</label>
+                                    <input type="email" id="user-email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="user-phone">Phone</label>
+                                    <input type="tel" id="user-phone" name="phone">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="user-password">Password</label>
+                                    <input type="password" id="user-password" name="password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="user-role">Role</label>
+                                    <select id="user-role" name="role">
+                                        <option value="customer">Customer</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn">Add User</button>
+                                <button type="reset" class="btn-outline">Reset</button>
+                                <button type="button" class="btn-outline" onclick="toggleForm('add-user-form')">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Edit User Form -->
+                    <div id="edit-user-form" class="admin-form-container" style="display: none;">
+                        <div class="section-header">
+                            <h3>Edit User</h3>
+                        </div>
+                        <div class="alert alert-success" style="display: none;">User updated successfully!</div>
+                        <div class="alert alert-danger" style="display: none;">Error updating user. Please try again.</div>
+                        
+                        <form class="admin-form" action="${pageContext.request.contextPath}/EditUserController" method="post" id="editUserForm">
+                            <input type="hidden" id="edit-user-id" name="userId">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="edit-user-firstname">First Name</label>
+                                    <input type="text" id="edit-user-firstname" name="firstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-user-lastname">Last Name</label>
+                                    <input type="text" id="edit-user-lastname" name="lastName" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="edit-user-email">Email</label>
+                                    <input type="email" id="edit-user-email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-user-phone">Phone</label>
+                                    <input type="tel" id="edit-user-phone" name="phone">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="edit-user-password">Password</label>
+                                    <input type="password" id="edit-user-password" name="password" placeholder="Leave blank to keep current password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-user-role">Role</label>
+                                    <select id="edit-user-role" name="role">
+                                        <option value="customer">Customer</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn">Update User</button>
+                                <button type="button" class="btn-outline" onclick="toggleForm('edit-user-form')">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Role</th>
+                                    <th>Joined Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#U001</td>
+                                    <td>John Smith</td>
+                                    <td>john.smith@example.com</td>
+                                    <td>(555) 123-4567</td>
+                                    <td>Customer</td>
+                                    <td>Jan 15, 2025</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small" onclick="editUser('U001', 'John', 'Smith', 'john.smith@example.com', '(555) 123-4567', 'customer')">Edit</button>
+                                            <button class="btn-small" onclick="deleteUser('U001')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#U002</td>
+                                    <td>Sarah Johnson</td>
+                                    <td>sarah.j@example.com</td>
+                                    <td>(555) 987-6543</td>
+                                    <td>Customer</td>
+                                    <td>Feb 3, 2025</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small" onclick="editUser('U002', 'Sarah', 'Johnson', 'sarah.j@example.com', '(555) 987-6543', 'customer')">Edit</button>
+                                            <button class="btn-small" onclick="deleteUser('U002')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#U003</td>
+                                    <td>Michael Brown</td>
+                                    <td>michael.b@example.com</td>
+                                    <td>(555) 456-7890</td>
+                                    <td>Admin</td>
+                                    <td>Jan 5, 2025</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small" onclick="editUser('U003', 'Michael', 'Brown', 'michael.b@example.com', '(555) 456-7890', 'admin')">Edit</button>
+                                            <button class="btn-small" onclick="deleteUser('U003')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#U004</td>
+                                    <td>Emily Davis</td>
+                                    <td>emily.d@example.com</td>
+                                    <td>(555) 234-5678</td>
+                                    <td>Customer</td>
+                                    <td>Mar 12, 2025</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small" onclick="editUser('U004', 'Emily', 'Davis', 'emily.d@example.com', '(555) 234-5678', 'customer')">Edit</button>
+                                            <button class="btn-small" onclick="deleteUser('U004')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#U005</td>
+                                    <td>Admin User</td>
+                                    <td>admin@bloomandblossom.com</td>
+                                    <td>(555) 111-0000</td>
+                                    <td>Admin</td>
+                                    <td>Jan 1, 2025</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small" onclick="editUser('U005', 'Admin', 'User', 'admin@bloomandblossom.com', '(555) 111-0000', 'admin')">Edit</button>
+                                            <button class="btn-small" onclick="deleteUser('U005')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section id="orders-section" class="admin-section-container">
+                <div class="admin-page-header">
+                    <h2>Orders Management</h2>
+                    <p>View and manage customer orders</p>
+                </div>
+                
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h3>All Orders</h3>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Total</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#1005</td>
+                                    <td>John Smith</td>
+                                    <td>April 18, 2025</td>
+                                    <td><span class="status pending">Pending</span></td>
+                                    <td>$65.99</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small">View</button>
+                                            <button class="btn-small">Edit</button>
+                                            <button class="btn-small">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#1004</td>
+                                    <td>Sarah Johnson</td>
+                                    <td>April 17, 2025</td>
+                                    <td><span class="status shipped">Shipped</span></td>
+                                    <td>$29.99</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small">View</button>
+                                            <button class="btn-small">Edit</button>
+                                            <button class="btn-small">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#1003</td>
+                                    <td>Michael Brown</td>
+                                    <td>April 16, 2025</td>
+                                    <td><span class="status completed">Completed</span></td>
+                                    <td>$45.98</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small">View</button>
+                                            <button class="btn-small">Edit</button>
+                                            <button class="btn-small">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#1002</td>
+                                    <td>Jane Doe</td>
+                                    <td>April 15, 2025</td>
+                                    <td><span class="status pending">Pending</span></td>
+                                    <td>$45.98</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small">View</button>
+                                            <button class="btn-small">Edit</button>
+                                            <button class="btn-small">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#1001</td>
+                                    <td>Jane Doe</td>
+                                    <td>March 28, 2025</td>
+                                    <td><span class="status completed">Completed</span></td>
+                                    <td>$29.99</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-small">View</button>
+                                            <button class="btn-small">Edit</button>
+                                            <button class="btn-small">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports-section" class="admin-section-container">
+                <div class="admin-page-header">
+                    <h2>Reports</h2>
+                    <p>View sales and inventory reports</p>
+                </div>
+                
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h3>Sales Summary</h3>
+                    </div>
+                    <div class="admin-stats">
+                        <div class="admin-stat-card">
+                            <h3>Today's Sales</h3>
+                            <p class="stat-number">$245.98</p>
+                        </div>
+                        <div class="admin-stat-card">
+                            <h3>Weekly Sales</h3>
+                            <p class="stat-number">$1,245.50</p>
+                        </div>
+                        <div class="admin-stat-card">
+                            <h3>Monthly Sales</h3>
+                            <p class="stat-number">$4,285.75</p>
+                        </div>
+                        <div class="admin-stat-card">
+                            <h3>Annual Sales</h3>
+                            <p class="stat-number">$52,648.30</p>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="product-description">Description</label>
-                        <textarea id="product-description" name="productDescription" rows="4"></textarea>
+                </div>
+                
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h3>Top Selling Products</h3>
                     </div>
-                    <div class="form-group">
-				        <label for="product-image">Product Image</label>
-				        <input type="file" id="product-image" name="image" accept="image/*" required>
-				    </div>
-                    <div class="form-actions">
-                        <button type="submit" class="btn">Add Product</button>
-                        <button type="reset" class="btn-outline">Reset</button>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Units Sold</th>
+                                    <th>Revenue</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Red Rose Bouquet</td>
+                                    <td>Roses</td>
+                                    <td>45</td>
+                                    <td>$1,349.55</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Mixed Bouquet</td>
+                                    <td>Bouquets</td>
+                                    <td>32</td>
+                                    <td>$1,279.68</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Tulip Arrangement</td>
+                                    <td>Tulips</td>
+                                    <td>28</td>
+                                    <td>$699.72</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Lily Bouquet</td>
+                                    <td>Lilies</td>
+                                    <td>18</td>
+                                    <td>$629.82</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Sunflower Bunch</td>
+                                    <td>Sunflowers</td>
+                                    <td>15</td>
+                                    <td>$299.85</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </form>
-            </div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -226,5 +827,138 @@
             <p>&copy; 2025 Bloom & Blossom Admin Panel. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        // Function to show selected section and hide others
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.admin-section-container');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).style.display = 'block';
+            
+            // Update active nav link
+            const navLinks = document.querySelectorAll('.admin-nav a');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + sectionId) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        // Function to toggle form visibility
+        function toggleForm(formId) {
+            const form = document.getElementById(formId);
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+                
+                // Hide other forms
+                if (formId === 'edit-product-form') {
+                    document.getElementById('add-user-form').style.display = 'none';
+                    document.getElementById('edit-user-form').style.display = 'none';
+                } else if (formId === 'add-user-form') {
+                    document.getElementById('edit-product-form').style.display = 'none';
+                    document.getElementById('edit-user-form').style.display = 'none';
+                } else if (formId === 'edit-user-form') {
+                    document.getElementById('edit-product-form').style.display = 'none';
+                    document.getElementById('add-user-form').style.display = 'none';
+                }
+                
+                // Scroll to the form
+                form.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                form.style.display = 'none';
+            }
+        }
+        
+        // Function to edit product
+        function editProduct(id, name, category, price, stock, description) {
+            // Fill the edit form with product data
+            document.getElementById('edit-product-id').value = id;
+            document.getElementById('edit-product-name').value = name;
+            document.getElementById('edit-product-price').value = price;
+            document.getElementById('edit-product-stock').value = stock;
+            document.getElementById('edit-product-description').value = description;
+            
+            // Show the edit form
+            toggleForm('edit-product-form');
+        }
+        
+        // Function to delete product
+        function deleteProduct(id) {
+            if (confirm('Are you sure you want to delete product #' + id + '?')) {
+                // In a real application, this would send a request to delete the product
+                alert('Product #' + id + ' has been deleted.');
+            }
+        }
+        
+        // Function to edit user
+        function editUser(id, firstName, lastName, email, phone, role) {
+            // Fill the edit form with user data
+            document.getElementById('edit-user-id').value = id;
+            document.getElementById('edit-user-firstname').value = firstName;
+            document.getElementById('edit-user-lastname').value = lastName;
+            document.getElementById('edit-user-email').value = email;
+            document.getElementById('edit-user-phone').value = phone;
+            document.getElementById('edit-user-role').value = role;
+            
+            // Show the edit form
+            toggleForm('edit-user-form');
+        }
+        
+        // Function to delete user
+        function deleteUser(id) {
+            if (confirm('Are you sure you want to delete user #' + id + '?')) {
+                // In a real application, this would send a request to delete the user
+                alert('User #' + id + ' has been deleted.');
+            }
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show dashboard by default
+            showSection('dashboard-section');
+            
+            // Set up logout link
+            document.getElementById('logout-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to logout?')) {
+                    document.getElementById('logoutForm').submit();
+                }
+            });
+            
+            // Set up form submissions
+            document.getElementById('productForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // In a real application, this would send the form data to the server
+                alert('Product added successfully!');
+            });
+            
+            document.getElementById('editProductForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // In a real application, this would send the form data to the server
+                alert('Product updated successfully!');
+                toggleForm('edit-product-form');
+            });
+            
+            document.getElementById('userForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // In a real application, this would send the form data to the server
+                alert('User added successfully!');
+                toggleForm('add-user-form');
+            });
+            
+            document.getElementById('editUserForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // In a real application, this would send the form data to the server
+                alert('User updated successfully!');
+                toggleForm('edit-user-form');
+            });
+        });
+    </script>
 </body>
 </html>

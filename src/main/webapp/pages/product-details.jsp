@@ -13,6 +13,31 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+    /* Message styles */
+			.message-container {
+			    margin-bottom: 1.5rem;
+			}
+			
+			.alert {
+			    padding: 12px 16px;
+			    border-radius: 4px;
+			    margin-bottom: 1rem;
+			    font-size: 0.9rem;
+			}
+			
+			.alert-success {
+			    background-color: #d4edda;
+			    color: #155724;
+			    border: 1px solid #c3e6cb;
+			}
+			
+			.alert-error {
+			    background-color: #f8d7da;
+			    color: #721c24;
+			    border: 1px solid #f5c6cb;
+			}
+	</style>
 </head>
 <body>
     <%@ include file="/includes/header.jsp" %>
@@ -56,6 +81,14 @@
                     </div>
                     
                     <div class="product-info">
+                    	<div class="message-container">
+					        <c:if test="${not empty successMessage}">
+					            <div class="alert alert-success">${successMessage}</div>
+					        </c:if>
+					        <c:if test="${not empty errorMessage}">
+					            <div class="alert alert-error">${errorMessage}</div>
+					        </c:if>
+					    </div>
                         <h1>${product.productName}</h1>
                         <div class="product-price">$${product.price}</div>
                         <div class="product-rating">
@@ -85,7 +118,12 @@
                                 <input type="number" value="1" min="1" max="${product.quantity}" class="quantity-input">
                                 <button class="quantity-btn increase">+</button>
                             </div>
-                            <button class="btn btn-primary add-to-cart-btn" data-product-id="${product.productId}">Add to Cart</button>
+                            <form method="post" action="${pageContext.request.contextPath}/product-details" class="add-to-cart-form">
+							    <input type="hidden" name="action" value="addToCart">
+							    <input type="hidden" name="productId" value="${product.productId}">
+							    <input type="hidden" name="quantity" id="hidden-quantity" value="1">
+							    <button type="submit" class="btn btn-primary">Add to Cart</button>
+							</form>
                             <button class="btn-wishlist">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                             </button>
@@ -147,7 +185,6 @@
                                             <p class="product-price">$${similarProduct.price}</p>
                                         </div>
                                     </a>
-                                    <button class="btn btn-secondary add-to-cart" data-product-id="${similarProduct.productId}">Add to Cart</button>
                                 </div>
                             </c:forEach>
                         </c:otherwise>
@@ -185,21 +222,7 @@
             const quantityInput = document.querySelector('.quantity-input');
             const maxQuantity = ${product.quantity};
             
-            decreaseBtn.addEventListener('click', function() {
-                let value = parseInt(quantityInput.value);
-                if (value > 1) {
-                    quantityInput.value = value - 1;
-                }
-            });
-            
-            increaseBtn.addEventListener('click', function() {
-                let value = parseInt(quantityInput.value);
-                if (value < maxQuantity) {
-                    quantityInput.value = value + 1;
-                }
-            });
-            
-            // Ensure quantity doesn't exceed stock
+         // Update the quantity sync logic
             quantityInput.addEventListener('change', function() {
                 let value = parseInt(this.value);
                 if (value < 1) {
@@ -207,18 +230,27 @@
                 } else if (value > maxQuantity) {
                     this.value = maxQuantity;
                 }
+                document.getElementById('hidden-quantity').value = this.value;
+            });
+
+            // Also update the increase/decrease buttons
+            decreaseBtn.addEventListener('click', function() {
+                let value = parseInt(quantityInput.value);
+                if (value > 1) {
+                    quantityInput.value = value - 1;
+                    document.getElementById('hidden-quantity').value = quantityInput.value;
+                }
+            });
+
+            increaseBtn.addEventListener('click', function() {
+                let value = parseInt(quantityInput.value);
+                if (value < maxQuantity) {
+                    quantityInput.value = value + 1;
+                    document.getElementById('hidden-quantity').value = quantityInput.value;
+                }
             });
             
             // Add to cart functionality can be added here
-            const addToCartBtn = document.querySelector('.add-to-cart-btn');
-            addToCartBtn.addEventListener('click', function() {
-                const productId = this.getAttribute('data-product-id');
-                const quantity = parseInt(quantityInput.value);
-                
-                // Here you would add code to add the product to the cart
-                // For example, using fetch to call a cart API endpoint
-                alert(`Added ${quantity} of product #${productId} to cart!`);
-            });
             
             // Add to cart buttons on similar products
             const similarAddToCartBtns = document.querySelectorAll('.products-grid .add-to-cart');

@@ -36,7 +36,7 @@
                 	<h1><b>Flora</b></h1>
                     <h2>Beautiful Blooms for Every Occasion</h2>
                     <p>Handcrafted floral arrangements delivered with care</p>
-                    <a href="products.jsp" class="btn btn-primary">Shop Now</a>
+                    <a href="${pageContext.request.contextPath}/products.jsp" class="btn btn-primary">Shop Now</a>
                 </div>
                 <img src="${pageContext.request.contextPath}/items/Bouquet.png" alt="Flower Bouquet">
             </div>

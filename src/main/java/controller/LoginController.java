@@ -55,6 +55,8 @@ public class LoginController extends HttpServlet {
 
             if (user != null) {
                 // 1. Create HTTP session and store user object
+            	
+            	
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
                 
@@ -82,6 +84,7 @@ public class LoginController extends HttpServlet {
                 if (redirectUrl != null) {
                     session.removeAttribute("redirectAfterLogin");
                     response.sendRedirect(redirectUrl);
+                    System.out.println("DEBUG: Logged in userId = " + user.getUserId());
                 } else {
                     // Default redirect based on role
                     if ("Admin".equals(user.getRole())) {

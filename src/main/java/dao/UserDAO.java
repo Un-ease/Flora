@@ -38,19 +38,19 @@ public class UserDAO {
             ps.setString(1, email);
 
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    String storedHash = rs.getString("password_hash");
-
-                    if (BCrypt.checkpw(password, storedHash)) {
-                        return new User(
-                            rs.getInt("user_id"),
-                            rs.getString("full_name"),
-                            rs.getString("email"),
-                            storedHash,
-                            rs.getString("role")
-                        );
-                    }
-                }
+            	if (rs.next()) {
+            	    int userId = rs.getInt("user_id");
+            	    String storedHash = rs.getString("password_hash");
+            	    if (BCrypt.checkpw(password, storedHash)) {
+            	        return new User(
+            	            userId,
+            	            rs.getString("full_name"),
+            	            rs.getString("email"),
+            	            storedHash,
+            	            rs.getString("role")
+            	        );
+            	    } 
+            	} 
                 return null;
             }
         }

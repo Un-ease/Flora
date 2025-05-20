@@ -7,11 +7,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart | Flora</title>
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/cart.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cart.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+    .empty-cart-message {
+    	grid-column: 1 / -1;
+    	text-align: center;
+    	padding: 3rem 0;
+	}
+	
+	.empty-cart-message p {
+	    font-size: 1.2rem;
+	    margin-bottom: 1.5rem;
+	    color: #666;
+	}
+	
+	.empty-cart-message .btn {
+	    margin-top: 1rem;
+	}
+    </style>
 </head>
 <body>
     <%@ include file="/includes/header.jsp" %>
@@ -32,91 +49,65 @@
             <div class="container">
                 <div class="cart-container">
                     <div class="cart-items">
-                        <div class="cart-header">
-                            <div class="cart-header-product">Product</div>
-                            <div class="cart-header-price">Price</div>
-                            <div class="cart-header-quantity">Quantity</div>
-                            <div class="cart-header-total">Total</div>
-                        </div>
-                        
-                        <!-- Cart Item 1 -->
-                        <div class="cart-item">
-                            <div class="cart-item-product">
-                                <div class="cart-item-image">
-                                    <img src="/placeholder.svg?height=100&width=100" alt="Spring Delight">
-                                </div>
-                                <div class="cart-item-details">
-                                    <h3>Spring Delight</h3>
-                                    <p class="cart-item-variant">Medium, Clear Glass Vase</p>
-                                    <button class="remove-item">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                                        Remove
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="cart-item-price">$49.99</div>
-                            <div class="cart-item-quantity">
-                                <div class="quantity-selector">
-                                    <button class="quantity-btn decrease">-</button>
-                                    <input type="number" value="1" min="1" max="10" class="quantity-input">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                            <div class="cart-item-total">$49.99</div>
-                        </div>
-                        
-                        <!-- Cart Item 2 -->
-                        <div class="cart-item">
-                            <div class="cart-item-product">
-                                <div class="cart-item-image">
-                                    <img src="/placeholder.svg?height=100&width=100" alt="Elegant Roses">
-                                </div>
-                                <div class="cart-item-details">
-                                    <h3>Elegant Roses</h3>
-                                    <p class="cart-item-variant">Medium, Ceramic White Vase</p>
-                                    <button class="remove-item">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                                        Remove
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="cart-item-price">$69.99</div>
-                            <div class="cart-item-quantity">
-                                <div class="quantity-selector">
-                                    <button class="quantity-btn decrease">-</button>
-                                    <input type="number" value="1" min="1" max="10" class="quantity-input">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                            <div class="cart-item-total">$69.99</div>
-                        </div>
-                        
-                        <!-- Cart Item 3 -->
-                        <div class="cart-item">
-                            <div class="cart-item-product">
-                                <div class="cart-item-image">
-                                    <img src="/placeholder.svg?height=100&width=100" alt="Lavender Love">
-                                </div>
-                                <div class="cart-item-details">
-                                    <h3>Lavender Love</h3>
-                                    <p class="cart-item-variant">Small, Clear Glass Vase</p>
-                                    <button class="remove-item">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                                        Remove
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="cart-item-price">$55.99</div>
-                            <div class="cart-item-quantity">
-                                <div class="quantity-selector">
-                                    <button class="quantity-btn decrease">-</button>
-                                    <input type="number" value="1" min="1" max="10" class="quantity-input">
-                                    <button class="quantity-btn increase">+</button>
-                                </div>
-                            </div>
-                            <div class="cart-item-total">$55.99</div>
-                        </div>
-                    </div>
+					    <div class="cart-header">
+					        <div class="cart-header-product">Product</div>
+					        <div class="cart-header-price">Price</div>
+					        <div class="cart-header-quantity">Quantity</div>
+					        <div class="cart-header-total">Total</div>
+					    </div>
+					    
+					    <c:choose>
+					        <c:when test="${empty cartItems}">
+					            <div class="empty-cart-message">
+					                <p>Your cart is empty</p>
+					                <a href="products.jsp" class="btn btn-primary">Continue Shopping</a>
+					            </div>
+					        </c:when>
+					        <c:otherwise>
+					            <c:forEach var="item" items="${cartItems}">
+					                <div class="cart-item">
+					                    <div class="cart-item-product">
+					                        <div class="cart-item-image">
+					                            <c:choose>
+					                                <c:when test="${empty item.product.image}">
+					                                    <div class="no-image">No Image</div>
+					                                </c:when>
+					                                <c:otherwise>
+					                                    <img src="${pageContext.request.contextPath}/uploads/${item.product.image}" alt="${item.product.productName}">
+					                                </c:otherwise>
+					                            </c:choose>
+					                        </div>
+					                        <div class="cart-item-details">
+					                            <h3>${item.product.productName}</h3>
+					                            <p class="cart-item-variant">SKU: FL-${item.product.productId}</p>
+					                            <form method="post" action="${pageContext.request.contextPath}/cart" class="remove-form">
+					                                <input type="hidden" name="action" value="remove">
+					                                <input type="hidden" name="productId" value="${item.product.productId}">
+					                                <button type="submit" class="remove-item">
+					                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+					                                    Remove
+					                                </button>
+					                            </form>
+					                        </div>
+					                    </div>
+					                    <div class="cart-item-price">$${item.product.price}</div>
+					                    <div class="cart-item-quantity">
+					                        <form method="post" action="${pageContext.request.contextPath}/cart" class="update-form">
+					                            <input type="hidden" name="action" value="update">
+					                            <input type="hidden" name="productId" value="${item.product.productId}">
+					                            <div class="quantity-selector">
+					                                <button type="button" class="quantity-btn decrease">-</button>
+					                                <input type="number" name="quantity" value="${item.quantity}" min="1" max="${item.product.quantity}" class="quantity-input">
+					                                <button type="button" class="quantity-btn increase">+</button>
+					                            </div>
+					                        </form>
+					                    </div>
+					                    <div class="cart-item-total">$${item.product.price * item.quantity}</div>
+					                </div>
+					            </c:forEach>
+					        </c:otherwise>
+					    </c:choose>
+					</div>
                     
                     <div class="cart-actions">
                         <div class="coupon">
@@ -127,30 +118,30 @@
                     </div>
                     
                     <div class="cart-summary">
-                        <h2>Cart Totals</h2>
-                        <div class="summary-row">
-                            <span>Subtotal</span>
-                            <span>$175.97</span>
-                        </div>
-                        <div class="summary-row">
-                            <span>Shipping</span>
-                            <span>$12.99</span>
-                        </div>
-                        <div class="summary-row total">
-                            <span>Total</span>
-                            <span>$188.96</span>
-                        </div>
-                        <div class="checkout-button">
-                            <a href="confirmation.jsp" class="btn btn-primary">Proceed to Checkout</a>
-                        </div>
-                    </div>
+					    <h2>Cart Totals</h2>
+					    <div class="summary-row">
+					        <span>Subtotal</span>
+					        <span>$${subtotal}</span>
+					    </div>
+					    <div class="summary-row">
+					        <span>Shipping</span>
+					        <span>${subtotal > 50 ? 'FREE' : '$12.99'}</span>
+					    </div>
+					    <div class="summary-row total">
+					        <span>Total</span>
+					        <span>$${total}</span>
+					    </div>
+					    <div class="checkout-button">
+					        <a href="checkout.jsp" class="btn btn-primary">Proceed to Checkout</a>
+					    </div>
+					</div>
                 </div>
             </div>
         </section>
         
         <section class="continue-shopping">
             <div class="container">
-                <a href="products.jsp" class="btn btn-outline">
+                <a href="${pageContext.request.contextPath}/products" class="btn btn-outline">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
                     Continue Shopping
                 </a>
@@ -161,47 +152,52 @@
      <%@ include file="/includes/footer.jsp" %>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Quantity selector functionality
-            const decreaseBtns = document.querySelectorAll('.decrease');
-            const increaseBtns = document.querySelectorAll('.increase');
-            
-            decreaseBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const input = this.nextElementSibling;
-                    let value = parseInt(input.value);
-                    if (value > 1) {
-                        input.value = value - 1;
-                        updateItemTotal(this);
-                    }
-                });
-            });
-            
-            increaseBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const input = this.previousElementSibling;
-                    let value = parseInt(input.value);
-                    if (value < 10) {
-                        input.value = value + 1;
-                        updateItemTotal(this);
-                    }
-                });
-            });
-            
-            // Update item total when quantity changes
-            function updateItemTotal(element) {
-                const cartItem = element.closest('.cart-item');
-                const priceElement = cartItem.querySelector('.cart-item-price');
-                const quantityElement = cartItem.querySelector('.quantity-input');
-                const totalElement = cartItem.querySelector('.cart-item-total');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Quantity selector functionality
+        document.querySelectorAll('.quantity-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const form = this.closest('.update-form');
+                const input = form.querySelector('.quantity-input');
+                let value = parseInt(input.value);
                 
-                const price = parseFloat(priceElement.textContent.replace('$', ''));
-                const quantity = parseInt(quantityElement.value);
-                const total = price * quantity;
+                if (this.classList.contains('decrease') && value > 1) {
+                    input.value = value - 1;
+                } 
+                else if (this.classList.contains('increase')) {
+                    input.value = value + 1;
+                }
                 
-                totalElement.textContent = '$' + total.toFixed(2);
-            }
+                // Submit the form when quantity changes
+                form.submit();
+            });
         });
+        
+        // AJAX form submissions for better UX
+        document.querySelectorAll('.update-form, .remove-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload(); // Refresh to show updated cart
+                    } else {
+                        throw new Error('Network response was not ok');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error updating cart. Please try again.');
+                });
+            });
+        });
+    });
     </script>
 </body>
 </html>

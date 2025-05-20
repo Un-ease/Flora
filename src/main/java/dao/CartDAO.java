@@ -134,4 +134,17 @@ public class CartDAO {
         }
         return 0;
     }
+    
+    
+    public boolean updateCartItem(int userId, int productId, int quantity) throws SQLException {
+        String query = "UPDATE cart_items SET quantity = ? WHERE user_id = ? AND product_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, quantity);
+            ps.setInt(2, userId);
+            ps.setInt(3, productId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+
 }

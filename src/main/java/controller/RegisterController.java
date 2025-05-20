@@ -27,6 +27,8 @@ public class RegisterController extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
+    
+    
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -79,7 +81,8 @@ public class RegisterController extends HttpServlet {
                 String sameSiteHeader = String.format("jwt=%s; SameSite=Strict", token);
                 response.setHeader("Set-Cookie", sameSiteHeader);
                 
-                // Set user in session and CSRF token
+                // Set user in session and CSRF token 
+                //CSRF Token not in use
                 HttpSession session = request.getSession();
                 session.setAttribute("user", newUser);
                 String csrfToken = UUID.randomUUID().toString();
@@ -100,3 +103,5 @@ public class RegisterController extends HttpServlet {
     }
 
 }
+
+

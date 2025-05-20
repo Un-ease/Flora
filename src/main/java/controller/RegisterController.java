@@ -41,67 +41,44 @@ public class RegisterController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        
-        String fullName = request.getParameter("fullName");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+	        throws ServletException, IOException {
+	    
+	    String fullName = request.getParameter("fullName");
+	    String email = request.getParameter("email");
+	    String password = request.getParameter("password");
 
-        User newUser = new User();
-        newUser.setFullName(fullName);
-        newUser.setEmail(email);
-        newUser.setPassword(password);
-        newUser.setRole("Customer");
+	    User newUser = new User();
+	    newUser.setFullName(fullName);
+	    newUser.setEmail(email);
+	    newUser.setPassword(password);
+	    newUser.setRole("Customer");
 
-        try {
-            UserDAO userDao = new UserDAO();
-            if (userDao.isEmailTaken(email)) {
-                request.setAttribute("errorMessage", "Email address is already in use. Please use a different email.");
-                request.setAttribute("fullName", fullName);
-                request.setAttribute("email", email); // Make sure this line exists
-                request.getRequestDispatcher("/pages/register.jsp").forward(request, response);
-                request.getRequestDispatcher("/css/main.css").forward(request,response);
-                request.getRequestDispatcher("/css/auth.css").forward(request,response);
-                return;
-            }
-          
-            if (userDao.register(newUser)) {
-                // Create JWT token
-                String token = JwtUtil.generateToken(newUser.getEmail(), newUser.getRole());
-                
-                // Set token in cookie
-                Cookie cookie = new Cookie("jwt", token);
-                cookie.setHttpOnly(true);
-                cookie.setSecure(request.isSecure());
-                cookie.setPath("/");
-                cookie.setMaxAge(24 * 60 * 60);
-                response.addCookie(cookie);
-                
-                // Set SameSite attribute
-                String sameSiteHeader = String.format("jwt=%s; SameSite=Strict", token);
-                response.setHeader("Set-Cookie", sameSiteHeader);
-                
-                // Set user in session and CSRF token 
-                //CSRF Token not in use
-                HttpSession session = request.getSession();
-                session.setAttribute("user", newUser);
-                String csrfToken = UUID.randomUUID().toString();
-                session.setAttribute("csrfToken", csrfToken);
-                
-                response.sendRedirect(request.getContextPath() + "/pages/index.jsp");
-            } else {
-                request.setAttribute("errorMessage", "Registration failed. Please try again.");
-                request.setAttribute("fullName", fullName); // Preserve entered name
-                request.getRequestDispatcher("/pages/register.jsp").forward(request, response);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "System error during registration: " + e.getMessage());
-            request.setAttribute("fullName", fullName); // Preserve entered name
-            request.getRequestDispatcher("/pages/register.jsp").forward(request, response);
-        }
-    }
-
+	    try {
+	        UserDAO userDao = new UserDAO();
+	        if (userDao.isEmailTaken(email)) {
+	            request.setAttribute("errorMessage", "Email address is already in use. Please use a different email.");
+	            request.setAttribute("fullName", fullName);
+	            request.setAttribute("email", email);
+	            request.getRequestDispatcher("/pages/register.jsp").forward(request, response);
+	            return;
+	        }
+	      
+	        if (userDao.register(newUser)) {
+	            // Registration successful - redirect to login page with success message
+	            request.getSession().setAttribute("registrationSuccess", "Registration successful! Please login.");
+	            response.sendRedirect(request.getContextPath() + "/pages/login.jsp");
+	        } else {
+	            request.setAttribute("errorMessage", "Registration failed. Please try again.");
+	            request.setAttribute("fullName", fullName); // Preserve entered name
+	            request.getRequestDispatcher("/pages/register.jsp").forward(request, response);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        request.setAttribute("errorMessage", "System error during registration: " + e.getMessage());
+	        request.setAttribute("fullName", fullName); // Preserve entered name
+	        request.getRequestDispatcher("/pages/register.jsp").forward(request, response);
+	    }
+	}
 }
 
 

@@ -19,47 +19,46 @@
         <div class="container">
             <div class="checkout-title">
                 <h1>Checkout</h1>
+                <c:if test="${not empty errorMessage}">
+                <div class="alert alert-danger">
+                    ${errorMessage}
+                </div>
+            </c:if>
             </div>
             
             <div class="checkout-layout">
                 <div class="checkout-main">
+                <form method="post" action="${pageContext.request.contextPath}/checkout" class="checkout-main">
                     <section class="checkout-section">
                         <h2>Shipping Information</h2>
-                        <form class="checkout-form">
+                        <div class="checkout-form">
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="fullname">Full Name</label>
-                                    <input type="text" id="full-name" required>
+                                    <input type="text" name="fullName" id="full-name" value="${user.fullName}"required>
+                                    
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email Address</label>
-                                <input type="email" id="email" required>
+                                <input type="email" name="email" id="email" value="${user.email}" required>
                             </div>
                             
                             <div class="form-group">
-                                <label for="address">Street Address</label>
-                                <input type="text" id="address" required>
+                                <label for="address">Address</label>
+                                <input type="text" name="address" id="address" value="${user.address}"required>
                             </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="city">City</label>
-                                    <input type="text" id="city" required>
-                                </div>
-                                
-                            </div>
+                           
                             
                             <div class="form-group">
                                 <label for="phone">Phone Number</label>
-                                <input type="tel" id="phone" required>
+                                <input type="tel" name="phone" id="phone" value="${user.phoneNumber}" required>
                             </div>
-                        </form>
+                      </div>
                     </section>
                     
                     <section class="checkout-section">
                          <h2>Payment Method</h2>
-                        <form class="checkout-form">
                            
 		                    <div class="payment-methods">
 		                        <label class="payment-method">
@@ -75,10 +74,14 @@
 		                            <span>Bank Transfer</span>
 		                        </label>
 		                    </div>
-
-                        </form>
                     </section>
-                    
+                    <div class="form-actions">
+                        <button type="submit" class="place-order-btn">
+                            <span>Place Order</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </button>
+                    </div>
+                </form>
 
                 </div>
                 
@@ -87,52 +90,43 @@
                         <h2>Order Summary</h2>
                         
                         <div class="order-items">
-                            <div class="order-item">
-                                <div class="item-image">
-                                    <img src="/placeholder.svg?height=80&width=80" alt="Spring Delight">
+                            <c:forEach var="item" items="${cartItems}">
+                                <div class="order-item">
+                                    <div class="item-image">
+                                        <c:choose>
+                                            <c:when test="${empty item.product.image}">
+                                                <div class="no-image">No Image</div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="${pageContext.request.contextPath}/uploads/${item.product.image}" alt="${item.product.productName}">
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                    <div class="item-details">
+                                        <h3>${item.product.productName}</h3>
+                                        <p class="item-price">$${item.product.price}</p>
+                                        <div class="item-quantity">Qty: ${item.quantity}</div>
+                                    </div>
                                 </div>
-                                <div class="item-details">
-                                    <h3>Spring Delight</h3>
-                                    <p class="item-price">$49.99</p>
-                                    <div class="item-quantity">Qty: 1</div>
-                                </div>
-                            </div>
-                            
-                            <div class="order-item">
-                                <div class="item-image">
-                                    <img src="/placeholder.svg?height=80&width=80" alt="Elegant Roses">
-                                </div>
-                                <div class="item-details">
-                                    <h3>Elegant Roses</h3>
-                                    <p class="item-price">$69.99</p>
-                                    <div class="item-quantity">Qty: 1</div>
-                                </div>
-                            </div>
+                            </c:forEach>
                         </div>
                         
                         <div class="order-totals">
                             <div class="total-row">
                                 <span>Subtotal</span>
-                                <span>$119.98</span>
+                                <span>$${subtotal}</span>
                             </div>
                             <div class="total-row">
                                 <span>Shipping</span>
-                                <span>$9.99</span>
-                            </div>
-                            <div class="total-row">
-                                <span>Tax</span>
-                                <span>$10.80</span>
+                                <span>${subtotal > 50 ? 'FREE' : '$12.99'}</span>
                             </div>
                             <div class="total-row grand-total">
                                 <span>Total</span>
-                                <span>$140.77</span>
+                                <span>$${total}</span>
                             </div>
                         </div>
-                        
-                        <button class="place-order-btn">
-                            <span>Place Order</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                        </button>
+
+                       
                         
                         <div class="secure-checkout">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>

@@ -1,14 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+    
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Confirmation | Flora</title>
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/confirmation.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/confirmation.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
@@ -34,19 +36,19 @@
                         <div class="order-info">
                             <div class="info-item">
                                 <span class="info-label">Order Number</span>
-                                <span class="info-value">#FL12345</span>
+                                <span class="info-value">#FL${order.orderId}</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-label">Date</span>
-                                <span class="info-value">April 6, 2025</span>
+                                <span class="info-value"><fmt:formatDate value="${order.orderDate}" pattern="MMMM d, yyyy"/></span>
                             </div>
                             <div class="info-item">
                                 <span class="info-label">Total</span>
-                                <span class="info-value">$188.96</span>
+                                <span class="info-value"><fmt:formatNumber value="${order.totalAmount}" type="currency"/></span>
                             </div>
                             <div class="info-item">
                                 <span class="info-label">Payment Method</span>
-                                <span class="info-value">Credit Card (****1234)</span>
+                                <span class="info-value">${order.paymentMethod}</span>
                             </div>
                         </div>
                     </div>
@@ -54,52 +56,43 @@
                     <div class="order-summary">
                         <h2>Order Summary</h2>
                         <div class="order-items">
-                            <div class="order-item">
-                                <div class="item-image">
-                                    <img src="/placeholder.svg?height=80&width=80" alt="Spring Delight">
+                            <c:forEach var="item" items="${orderItems}">
+                                <div class="order-item">
+                                    <div class="item-image">
+                                        <c:choose>
+                                            <c:when test="${empty item.product.image}">
+                                                <div class="no-image">No Image</div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="${pageContext.request.contextPath}/uploads/${item.product.image}" alt="${item.product.productName}">
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                    <div class="item-details">
+                                        <h3>${item.product.productName}</h3>
+                                        <p class="item-price"><fmt:formatNumber value="${item.price}" type="currency"/> x ${item.quantity}</p>
+                                    </div>
                                 </div>
-                                <div class="item-details">
-                                    <h3>Spring Delight</h3>
-                                    <p class="item-variant">Medium, Clear Glass Vase</p>
-                                    <p class="item-price">$49.99 x 1</p>
-                                </div>
-                            </div>
-                            
-                            <div class="order-item">
-                                <div class="item-image">
-                                    <img src="/placeholder.svg?height=80&width=80" alt="Elegant Roses">
-                                </div>
-                                <div class="item-details">
-                                    <h3>Elegant Roses</h3>
-                                    <p class="item-variant">Medium, Ceramic White Vase</p>
-                                    <p class="item-price">$69.99 x 1</p>
-                                </div>
-                            </div>
-                            
-                            <div class="order-item">
-                                <div class="item-image">
-                                    <img src="/placeholder.svg?height=80&width=80" alt="Lavender Love">
-                                </div>
-                                <div class="item-details">
-                                    <h3>Lavender Love</h3>
-                                    <p class="item-variant">Small, Clear Glass Vase</p>
-                                    <p class="item-price">$55.99 x 1</p>
-                                </div>
-                            </div>
+                            </c:forEach>
                         </div>
                         
                         <div class="order-totals">
                             <div class="total-row">
                                 <span>Subtotal</span>
-                                <span>$175.97</span>
+                                <span><fmt:formatNumber value="${subtotal}" type="currency"/></span>
                             </div>
                             <div class="total-row">
                                 <span>Shipping</span>
-                                <span>$12.99</span>
+                                <span>
+                                    <c:choose>
+                                        <c:when test="${subtotal > 50}">FREE</c:when>
+                                        <c:otherwise><fmt:formatNumber value="12.99" type="currency"/></c:otherwise>
+                                    </c:choose>
+                                </span>
                             </div>
                             <div class="total-row final-total">
                                 <span>Total</span>
-                                <span>$188.96</span>
+                                <span><fmt:formatNumber value="${order.totalAmount}" type="currency"/></span>
                             </div>
                         </div>
                     </div>
@@ -109,26 +102,24 @@
                         <div class="info-columns">
                             <div class="info-column">
                                 <h3>Shipping Address</h3>
-                                <p>
-                                    John Doe<br>
-                                    123 Flower Street<br>
-                                    Apt 4B<br>
-                                    New York, NY 10001<br>
-                                    United States
-                                </p>
+                                <p>${order.shippingAddress}</p>
                             </div>
                             <div class="info-column">
                                 <h3>Shipping Method</h3>
                                 <p>Standard Delivery (2-3 business days)</p>
                                 <h3>Estimated Delivery</h3>
-                                <p>April 9-10, 2025</p>
+                                <p>
+                                    <fmt:parseDate value="${order.orderDate}" type="date" pattern="yyyy-MM-dd" var="parsedDate"/>
+                                    <fmt:formatDate value="${parsedDate}" pattern="MMMM d, yyyy"/>
+                                    - 
+                                    Upto 4 Days
+                                </p>
                             </div>
                         </div>
                     </div>
                     
                     <div class="confirmation-actions">
-                        <a href="products.jsp" class="btn btn-outline">Continue Shopping</a>
-                        <a href="#" class="btn btn-primary">Track Order</a>
+                        <a href="${pageContext.request.contextPath}/products" class="btn btn-outline">Continue Shopping</a>
                     </div>
                 </div>
             </div>

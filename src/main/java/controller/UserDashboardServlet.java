@@ -53,7 +53,6 @@ public class UserDashboardServlet extends HttpServlet {
             e.printStackTrace(); // Handle properly in real projects
         }
         
-        System.out.println("Number: "+ user.getPhoneNumber());
         request.setAttribute("user", user);
         request.getRequestDispatcher("/pages/user-dashboard.jsp").forward(request, response);
     }

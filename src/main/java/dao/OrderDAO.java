@@ -132,4 +132,27 @@ public class OrderDAO {
         }
         return items;
     }
+    
+    public Order getOrderById(int orderId) throws SQLException {
+        String query = "SELECT * FROM orders WHERE order_id = ?";
+        
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, orderId);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Order order = new Order();
+                    order.setOrderId(rs.getInt("order_id"));
+                    order.setUserId(rs.getInt("user_id"));
+                    order.setOrderDate(rs.getTimestamp("order_date"));
+                    order.setStatus(rs.getString("status"));
+                    order.setTotalAmount(rs.getDouble("total_amount"));
+                    order.setShippingAddress(rs.getString("shipping_address"));
+                    order.setPaymentMethod(rs.getString("payment_method"));
+                    return order;
+                }
+            }
+        }
+        return null;
+    }
 }

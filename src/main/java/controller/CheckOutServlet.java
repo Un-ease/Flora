@@ -42,7 +42,7 @@ public class CheckOutServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         
         if (user == null) {
-            response.sendRedirect("${pageContext.request.contextPath}/pages/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/pages/login.jsp");
             return;
         }
         
@@ -52,17 +52,28 @@ public class CheckOutServlet extends HttpServlet {
             
             if (cartItems.isEmpty()) {
                 session.setAttribute("errorMessage", "Your cart is empty");
-                response.sendRedirect("cart.jsp");
+                response.sendRedirect(request.getContextPath() + "/cart");
                 return;
             }
             
+            // Calculate totals
+            double subtotal = cartItems.stream()
+                .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
+                .sum();
+            double shipping = subtotal > 50 ? 0 : 12.99;
+            double total = subtotal + shipping;
+            
             request.setAttribute("cartItems", cartItems);
-            request.getRequestDispatcher("/checkout").forward(request, response);
+            request.setAttribute("subtotal", subtotal);
+            request.setAttribute("shipping", shipping);
+            request.setAttribute("total", total);
+            request.setAttribute("user", user);
+            request.getRequestDispatcher("/pages/checkout.jsp").forward(request, response);
             
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("errorMessage", "Error loading checkout: " + e.getMessage());
-            response.sendRedirect("${pageContext.request.contextPath}/cart");
+            response.sendRedirect(request.getContextPath() + "/cart");
         }
     }
 
@@ -73,7 +84,7 @@ public class CheckOutServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/pages/login.jsp");
             return;
         }
         
@@ -82,21 +93,38 @@ public class CheckOutServlet extends HttpServlet {
             String fullName = request.getParameter("fullName");
             String email = request.getParameter("email");
             String address = request.getParameter("address");
-            String city = request.getParameter("city");
-            String zipCode = request.getParameter("zipCode");
             String paymentMethod = request.getParameter("paymentMethod");
             
+            // Validate required fields
+            if (fullName == null || fullName.isEmpty() || 
+                email == null || email.isEmpty() || 
+                address == null || address.isEmpty() || 
+                paymentMethod == null || paymentMethod.isEmpty()) {
+                
+                session.setAttribute("errorMessage", "Please fill in all required fields");
+                response.sendRedirect(request.getContextPath() + "/checkout");
+                return;
+            }
+            
             // Build complete shipping address
-            String shippingAddress = String.format("%s\n%s\n%s", address, city, zipCode);
+            String shippingAddress = String.format("%s", address );
             
             // Get cart items
             CartDAO cartDAO = new CartDAO();
             List<CartItem> cartItems = cartDAO.getCartItems(user.getUserId());
             
+            if (cartItems.isEmpty()) {
+                session.setAttribute("errorMessage", "Your cart is empty");
+                response.sendRedirect(request.getContextPath() + "/cart");
+                return;
+            }
+            
             // Calculate total
-            double total = cartItems.stream()
+            double subtotal = cartItems.stream()
                 .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
                 .sum();
+            double shipping = subtotal > 50 ? 0 : 12.99;
+            double total = subtotal + shipping;
             
             // Create order
             OrderDAO orderDAO = new OrderDAO();
@@ -123,19 +151,19 @@ public class CheckOutServlet extends HttpServlet {
                     
                     // Set success message
                     session.setAttribute("orderId", orderId);
-                    response.sendRedirect("order-confirmation");
+                    response.sendRedirect(request.getContextPath() + "/order-confirmation");
                     return;
                 }
             }
             
             // If we get here, something failed
             session.setAttribute("errorMessage", "Failed to process your order");
-            response.sendRedirect("checkout");
+            response.sendRedirect(request.getContextPath() + "/checkout");
             
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("errorMessage", "Error processing order: " + e.getMessage());
-            response.sendRedirect("checkout");
+            response.sendRedirect(request.getContextPath() + "/checkout");
         }
     }
 

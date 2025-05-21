@@ -65,6 +65,7 @@ public class CartServlet extends HttpServlet {
                 "Item: " + item.getProduct().getProductName() + 
                 ", Qty: " + item.getQuantity()
             ));
+            
             request.getRequestDispatcher("/pages/cart.jsp").forward(request, response);
             
             

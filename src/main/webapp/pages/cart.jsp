@@ -124,7 +124,7 @@
 					        <span>$${total}</span>
 					    </div>
 					    <div class="checkout-button">
-					        <a href="${pageContext.request.contextPath}/pages/confirmation.jsp" class="btn btn-primary">Proceed to Checkout</a>
+					        <a href="${pageContext.request.contextPath}/checkout" class="btn btn-primary">Proceed to Checkout</a>
 					    </div>
 					</div>
                 </div>

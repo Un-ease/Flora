@@ -33,27 +33,26 @@ public class ProductServlet extends HttpServlet {
 	 */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        
-        System.out.println("ProductServlet doGet called"); // Debug
+
+        System.out.println("ProductServlet doGet called");
+
+        String query = request.getParameter("query");
         
         try {
             ProductDAO productDAO = new ProductDAO();
-            List<Product> products = productDAO.getAllProducts();
+            List<Product> products;
             
-            // Debug output
-            System.out.println("Number of products from DB: " + products.size());
-            for (Product product : products) {
-                System.out.println("Product: " + product.getProductName() + 
-                                 ", Price: " + product.getPrice() + 
-                                 ", Image: " + product.getImage());
+            if (query != null && !query.trim().isEmpty()) {
+                System.out.println("Searching for products with keyword: " + query);
+                products = productDAO.searchProducts(query.trim());
+            } else {
+                products = productDAO.getAllProducts();
             }
-            
+
+
             request.setAttribute("products", products);
-            
-            // Verify attribute is set
-            System.out.println("Products attribute set: " + 
-                (request.getAttribute("products") != null)); // Debug
-            
+            request.setAttribute("query", query); // Optional: for displaying the query in the UI
+
             request.getRequestDispatcher("/pages/products.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,6 +60,8 @@ public class ProductServlet extends HttpServlet {
             request.getRequestDispatcher("/pages/error.jsp").forward(request, response);
         }
     }
+
+    
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {

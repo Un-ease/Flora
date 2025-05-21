@@ -50,19 +50,18 @@
         <section class="products-section">
             <div class="container">
                 <div class="search-container">
-                    <form class="search-form">
-                        <input type="text" placeholder="Search for flowers, arrangements, gifts..." class="search-input">
-                        <button type="submit" class="search-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        </button>
-                    </form>
+                    <form class="search-form" action="${pageContext.request.contextPath}/products" method="get">
+					    <input type="text" name="query" placeholder="Search for flowers, arrangements, gifts..." 
+					           class="search-input" value="${param.query}">
+					    <button type="submit" class="search-button">
+					        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+					    </button>
+					</form>
                 </div>
                 
                 <div class="products-content">
                     <div class="products-header">
-                        <div class="products-count">
-                            <p>Showing 12 of 36 products</p>
-                        </div>
+                       
                     </div>
                     
                    
@@ -98,16 +97,6 @@
 			                    
                        
                     
-                    <div class="pagination">
-                        <a href="#" class="active">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <a href="#">4</a>
-                        <a href="#" class="next">
-                            Next
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                        </a>
-                    </div>
                 </div>
             </div>
         </section>

@@ -1,0 +1,226 @@
+@charset "UTF-8";
+/* About Hero Section */
+.about-hero {
+    padding: var(--spacing-xl) 0;
+    text-align: center;
+    background-color: var(--color-light-gray);
+}
+
+.about-hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 500;
+    color: var(--color-dark);
+    margin-bottom: var(--spacing-sm);
+}
+
+.decorative-line {
+    width: 80px;
+    height: 2px;
+    background-color: var(--color-primary);
+    margin: 0 auto;
+}
+
+/* About Content Section */
+.about-content {
+    padding: var(--spacing-xl) 0;
+}
+
+.about-description {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 1.8;
+}
+
+.about-description p {
+    margin-bottom: var(--spacing-md);
+    color: var(--color-gray);
+    font-size: 1.1rem;
+}
+
+.about-description p:last-child {
+    margin-bottom: 0;
+}
+
+/* Team Section */
+.team-section {
+    padding: var(--spacing-xl) 0;
+    background-color: var(--color-light-gray);
+}
+
+.team-section h2 {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: var(--color-dark);
+    margin-bottom: var(--spacing-lg);
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.team-card {
+    background-color: var(--color-white);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    padding-bottom: var(--spacing-md);
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.team-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: var(--spacing-lg) auto var(--spacing-md);
+    border: 5px solid var(--color-white);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.team-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.team-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--color-dark);
+    margin-bottom: var(--spacing-xs);
+}
+
+.team-role {
+    display: block;
+    color: var(--color-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: var(--spacing-sm);
+}
+
+.team-card p {
+    padding: 0 var(--spacing-md);
+    color: var(--color-gray);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Values Section */
+.values-section {
+    padding: var(--spacing-xl) 0;
+}
+
+.values-section h2 {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: var(--color-dark);
+    margin-bottom: var(--spacing-lg);
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.value-item {
+    text-align: center;
+    padding: var(--spacing-md);
+}
+
+.value-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: rgba(var(--color-primary-rgb), 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-md);
+    color: var(--color-primary);
+}
+
+.value-item h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--color-dark);
+    margin-bottom: var(--spacing-sm);
+}
+
+.value-item p {
+    color: var(--color-gray);
+    line-height: 1.6;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .about-hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .team-section h2,
+    .values-section h2 {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-hero h1 {
+        font-size: 2.2rem;
+    }
+    
+    .about-description p {
+        font-size: 1rem;
+    }
+    
+    .team-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    
+    .team-image {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .team-card h3 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .about-hero {
+        padding: var(--spacing-lg) 0;
+    }
+    
+    .about-hero h1 {
+        font-size: 2rem;
+    }
+    
+    .team-grid {
+        grid-template-columns: 1fr;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+    
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+}

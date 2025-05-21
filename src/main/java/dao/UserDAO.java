@@ -104,14 +104,15 @@ public class UserDAO {
         
         return emailExists;
     }
+    
     public boolean updateUser(User user) throws SQLException, ClassNotFoundException {
         Objects.requireNonNull(user, "User cannot be null");
         
         String query;
         if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            query = "UPDATE users SET full_name = ?, email = ?, password_hash = ?, role = ? WHERE user_id = ?";
+            query = "UPDATE users SET full_name = ?, email = ?, password_hash = ?, address = ?, phone_number = ?, role = ? WHERE user_id = ?";
         } else {
-            query = "UPDATE users SET full_name = ?, email = ?, role = ? WHERE user_id = ?";
+            query = "UPDATE users SET full_name = ?, email = ?, address = ?, phone_number = ?, role = ? WHERE user_id = ?";
         }
         
         try (Connection conn = DatabaseConnection.getConnection();
@@ -126,12 +127,15 @@ public class UserDAO {
                 ps.setString(paramIndex++, hashedPassword);
             }
             
+            ps.setString(paramIndex++, user.getAddress());
+            ps.setString(paramIndex++, user.getPhoneNumber());
             ps.setString(paramIndex++, user.getRole());
             ps.setInt(paramIndex, user.getUserId());
             
             return ps.executeUpdate() > 0;
         }
     }
+
 
     public boolean deleteUser(int userID) throws SQLException, ClassNotFoundException {
     	System.out.println("Attempting to delete user ID: " + userID);
@@ -177,16 +181,20 @@ public class UserDAO {
             
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return new User(
+                    User user = new User(
                         rs.getInt("user_id"),
                         rs.getString("full_name"),
                         rs.getString("email"),
-                        null, // Don't retrieve password hash
+                        null, // password hash omitted
                         rs.getString("role")
                     );
+                    user.setAddress(rs.getString("address"));
+                    user.setPhoneNumber(rs.getString("phone_number"));
+                    return user;
                 }
             }
         }
         return null;
     }
+
 }

@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.User;
 
 import java.io.IOException;
@@ -37,44 +38,60 @@ public class EditUserController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        
-        try {
-            int userId = Integer.parseInt(request.getParameter("userId"));
-            String fullName = request.getParameter("fullname");
-            String email = request.getParameter("email");
-            String phone = request.getParameter("phone");
-            String role = request.getParameter("role");
-            String password = request.getParameter("password");
-            
-            // Create user object
-            User user = new User();
-            user.setUserId(userId);
-            user.setFullName(fullName);
-            user.setEmail(email);
-            user.setRole(role);
-            
-            // Only set password if it was provided
-            if (password != null && !password.isEmpty()) {
-                user.setPassword(password);
-            }
-            
-            // Update user
-            UserDAO userDAO = new UserDAO();
-            boolean isUpdated = userDAO.updateUser(user);
-            
-            if (isUpdated) {
-                request.getSession().setAttribute("successMessage", "User updated successfully!");
-            } else {
-                request.getSession().setAttribute("errorMessage", "Failed to update user");
-            }
-            
-            response.sendRedirect(request.getContextPath() + "/pages/admin-dashboard.jsp?section=users");
-            
-        } catch (Exception e) {
-            request.getSession().setAttribute("errorMessage", "Error: " + e.getMessage());
-            response.sendRedirect(request.getContextPath() + "/pages/admin-dashboard.jsp?section=users");
-        }
-    }
+	        throws ServletException, IOException {
+
+	    HttpSession session = request.getSession(false);
+	    if (session == null || session.getAttribute("user") == null) {
+	        response.sendRedirect(request.getContextPath() + "/pages/login.jsp");
+	        return;
+	    }
+
+	    try {
+	        int userId = Integer.parseInt(request.getParameter("userId"));
+	        String fullName = request.getParameter("fullname");
+	        String email = request.getParameter("email");
+	        String phone = request.getParameter("phone");
+	        String address = request.getParameter("address"); // ✅ FIXED
+	        String role = request.getParameter("role");
+	        String password = request.getParameter("password");
+
+	        UserDAO userDAO = new UserDAO();
+	        User existingUser = userDAO.getUserById(userId);
+	        if (existingUser == null) {
+	            session.setAttribute("errorMessage", "User not found.");
+	            response.sendRedirect(request.getContextPath() + "/pages/admin-dashboard.jsp?section=users");
+	            return;
+	        }
+
+	        existingUser.setFullName((fullName != null && !fullName.isEmpty()) ? fullName : existingUser.getFullName());
+	        existingUser.setEmail((email != null && !email.isEmpty()) ? email : existingUser.getEmail());
+	        existingUser.setPhoneNumber((phone != null && !phone.isEmpty()) ? phone : existingUser.getPhoneNumber());
+	        existingUser.setAddress((address != null && !address.isEmpty()) ? address : existingUser.getAddress()); // ✅ FIXED
+	        existingUser.setRole((role != null && !role.isEmpty()) ? role : existingUser.getRole());
+
+	        if (password != null && !password.isEmpty()) {
+	            existingUser.setPassword(password);
+	        } else {
+	            existingUser.setPassword(null);
+	        }
+
+	        boolean isUpdated = userDAO.updateUser(existingUser);
+
+	        if (isUpdated) {
+	            session.setAttribute("successMessage", "User updated successfully!");
+	        } else {
+	            session.setAttribute("errorMessage", "Failed to update user");
+	        }
+
+	        response.sendRedirect(request.getContextPath() + "/pages/admin-dashboard.jsp?section=users");
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        session.setAttribute("errorMessage", "Error: " + e.getMessage());
+	        response.sendRedirect(request.getContextPath() + "/pages/admin-dashboard.jsp?section=users");
+	    }
+	}
+
+
 
 }

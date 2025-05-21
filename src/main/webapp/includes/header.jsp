@@ -10,7 +10,7 @@
 <header>
     <div class="container header-container">
         <div class="logo">
-            <a href="${pageContext.request.contextPath}/index.jsp">
+            <a href="${pageContext.request.contextPath}/">
                 <h1>Flora</h1>
             </a>
         </div>
@@ -22,7 +22,7 @@
 		        <li><a href="${pageContext.request.contextPath}/products" 
 		               class="${requestScope.activePage eq 'shop' ? 'active' : ''}">Shop</a></li>
 		               
-		        <li><a href="#" 
+		        <li><a href="${pageContext.request.contextPath}/pages/about.jsp" 
 		               class="${requestScope.activePage eq 'about' ? 'active' : ''}">About</a></li>
 		               
 		        <li><a href="#" 
@@ -30,7 +30,7 @@
 		    </ul>
 		</nav>
         <div class="header-actions">
-            <a href="${pageContext.request.contextPath}/pages/user-dashboard.jsp" class="header-icon ${param.activePage eq 'account' ? 'active' : ''}">
+            <a href="${pageContext.request.contextPath}/UserDashboardServlet" class="header-icon ${param.activePage eq 'account' ? 'active' : ''}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>

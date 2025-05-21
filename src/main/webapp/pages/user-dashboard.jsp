@@ -31,12 +31,12 @@
     <%-- Set the active page parameter --%>
     <c:set var="activePage" value="account" scope="request"/>
 
-    <main>
+     <main>
         <section class="page-header">
             <div class="container">
                 <h1>My Account</h1>
                 <div class="breadcrumbs">
-                    <a href="index.jsp">Home</a> / <span>My Account</span>
+                    <a href="${pageContext.request.contextPath}">Home</a> / <span>My Account</span>
                 </div>
             </div>
         </section>
@@ -47,7 +47,7 @@
                     <aside class="dashboard-sidebar">
                         <div class="user-info">
 						    <div class="user-avatar">
-						        <img src="${pageContext.request.contextPath}/images/user-avatar.png" alt="User Avatar">
+						        <img src="${pageContext.request.contextPath}/images/user-avatar.png" alt="U">
 						    </div>
 						    <div class="user-details">
 						        <h3>${sessionScope.user.fullName}</h3>
@@ -59,15 +59,14 @@
                             <ul>
                                 <li><a href="#" class="active" data-tab="dashboard">Dashboard</a></li>
                                 <li><a href="#" data-tab="orders">My Orders</a></li>
-                                <li><a href="#" data-tab="addresses">Addresses</a></li>
                                 <li><a href="#" data-tab="wishlist">Wishlist</a></li>
                                 <li><a href="#" data-tab="account">Account Details</a></li>
                                 <li>
-    <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
-    <form id="logoutForm" action="${pageContext.request.contextPath}/LogOutController" method="get" style="display:none;">
-        <input type="hidden" name="csrfToken" value="${csrfToken}">
-    </form>
-</li>
+								    <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
+								    <form id="logoutForm" action="${pageContext.request.contextPath}/LogOutController" method="get" style="display:none;">
+								        <input type="hidden" name="csrfToken" value="${csrfToken}">
+								    </form>
+								</li>
                             </ul>
                         </nav>
                     </aside>
@@ -76,9 +75,9 @@
                         <!-- Dashboard Tab -->
                         <div class="dashboard-tab active" id="dashboard-tab">
                             <div class="welcome-message">
-							    <h2>Welcome back, ${sessionScope.user.fullName}!</h2>
-							    <p>From your account dashboard you can view your recent orders, manage your shipping and billing addresses, and edit your password and account details.</p>
-							</div>
+                                <h2>Welcome back, ${sessionScope.user.fullName}!</h2>
+                                <p>From your account dashboard you can view your recent orders, manage your wishlist, and edit your account details.</p>
+                            </div>
                             
                             <div class="dashboard-cards">
                                 <div class="dashboard-card">
@@ -103,22 +102,12 @@
                                 
                                 <div class="dashboard-card">
                                     <div class="card-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                    </div>
-                                    <div class="card-content">
-                                        <h3>Addresses</h3>
-                                        <p>2 saved addresses</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="dashboard-card">
-                                    <div class="card-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                                     </div>
                                     <div class="card-content">
-                                        <h3>Wishlist</h3>
-                                        <p>5 saved items</p>
-                                    </div>
+								        <h3>Wishlist</h3>
+								        <p>${wishlist.size()} saved item${wishlist.size() == 1 ? '' : 's'}</p>
+								    </div>
                                 </div>
                             </div>
                             
@@ -163,7 +152,7 @@
                             </div>
                         </div>
                         
-                        <!-- Orders Tab (Hidden by default) -->
+                        <!-- Orders Tab -->
                         <div class="dashboard-tab" id="orders-tab">
                             <h2>My Orders</h2>
                             <div class="table-responsive">
@@ -199,12 +188,102 @@
                                             <td>$129.99</td>
                                             <td><a href="#" class="btn-view">View</a></td>
                                         </tr>
+                                        <tr>
+                                            <td>#FL12342</td>
+                                            <td>January 30, 2025</td>
+                                            <td><span class="status-badge delivered">Delivered</span></td>
+                                            <td>$95.75</td>
+                                            <td><a href="#" class="btn-view">View</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>#FL12341</td>
+                                            <td>January 15, 2025</td>
+                                            <td><span class="status-badge delivered">Delivered</span></td>
+                                            <td>$112.50</td>
+                                            <td><a href="#" class="btn-view">View</a></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         
-                        <!-- Other tabs would be here but are hidden by default -->
+                        <!-- Wishlist Tab -->
+                        <div class="dashboard-tab" id="wishlist-tab">
+						    <h2>My Wishlist</h2>
+						    <div class="wishlist-grid">
+						        <c:choose>
+						            <c:when test="${not empty wishlist}">
+						                <c:forEach var="item" items="${wishlist}">
+						                    <div class="wishlist-item">
+						                        <form action="${pageContext.request.contextPath}/WishlistServlet" method="post" >
+						                       		<input type="hidden" name="action" value="remove">
+						                            <input type="hidden" name="productId" value="${item.product.productId}" />
+						                            <button type="submit" class="remove-wishlist" title="Remove from Wishlist">
+						                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+						                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+						                                </svg>
+						                            </button>
+						                        </form>
+						                        <div class="wishlist-image">
+						                            <img src="${pageContext.request.contextPath}/uploads/${item.product.image}" alt="${item.product.productName}" />
+						                        </div>
+						                        <h3>${item.product.productName}</h3>
+						                        <p class="wishlist-price">$${item.product.price}</p>
+						                        <form action="${pageContext.request.contextPath}/AddToCartController" method="post">
+						                            <input type="hidden" name="productId" value="${item.product.productId}" />
+						                            <button type="submit" class="btn btn-primary add-to-cart-btn">Add to Cart</button>
+						                        </form>
+						                    </div>
+						                </c:forEach>
+						            </c:when>
+						            <c:otherwise>
+						                <p>You have no items in your wishlist yet.</p>
+						            </c:otherwise>
+						        </c:choose>
+						    </div>
+						</div>
+                        
+                        <!-- Account Details Tab -->
+                        <div class="dashboard-tab" id="account-tab">
+                            <h2>Account Details</h2>
+                            <div class="account-form-container">
+                                <form class="account-form" action="${pageContext.request.contextPath}/UserDashboardServlet" method="post">
+                                    <div class="form-group">
+                                        <label for="full-name">Full Name</label>
+                                        <input type="text" id="full-name" name="fullName" value="${user.fullName}" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="email">Email Address</label>
+                                        <input type="email" id="email" name="email" value="${user.email}" disabled>
+                                        <small>Email cannot be changed</small>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="address">Address</label>
+                                        <input type="text" id="address" name="address" value="${user.address}" required>
+                                    </div>
+                                    
+                                    
+                                    <div class="form-group">
+                                        <label for="phone">Phone Number</label>
+                                        <input type="tel" id="phone" name="phone" value="${user.phoneNumber}" required>
+                                    </div>
+                                    
+                                    <div class="form-divider"></div>
+                                    
+                                    <div class="form-group">
+                                        <label for="current-password">Current Password</label>
+                                        <input type="password" id="current-password" name="currentPassword" placeholder="Enter current password to save changes" required>
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -221,23 +300,26 @@
             
             tabLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Remove active class from all links
-                    tabLinks.forEach(l => l.classList.remove('active'));
-                    
-                    // Add active class to clicked link
-                    this.classList.add('active');
-                    
-                    // Hide all tab contents
-                    tabContents.forEach(tab => tab.classList.remove('active'));
-                    
-                    // Show the corresponding tab content
-                    const tabId = this.getAttribute('data-tab') + '-tab';
-                    document.getElementById(tabId).classList.add('active');
+                    if (this.getAttribute('href') !== 'login.html') {
+                        e.preventDefault();
+                        
+                        // Remove active class from all links
+                        tabLinks.forEach(l => l.classList.remove('active'));
+                        
+                        // Add active class to clicked link
+                        this.classList.add('active');
+                        
+                        // Hide all tab contents
+                        tabContents.forEach(tab => tab.classList.remove('active'));
+                        
+                        // Show the corresponding tab content
+                        const tabId = this.getAttribute('data-tab') + '-tab';
+                        document.getElementById(tabId).classList.add('active');
+                    }
                 });
             });
         });
     </script>
+
 </body>
 </html>

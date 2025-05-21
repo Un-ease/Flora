@@ -6,6 +6,8 @@ public class User {
 	private String email;
 	private String password;
 	private String role;
+    private String address;
+    private String phoneNumber;
 	
 	//Constructors
 	public User(){
@@ -58,5 +60,21 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+    
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

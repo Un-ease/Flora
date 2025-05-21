@@ -1,7 +1,41 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="model.User" %>
+<%@ page import="model.Product" %>
+<%@ page import="dao.WishListDAO" %>
+
+<%
+// Get the product from request attribute (assuming it's already set by your servlet)
+Product product = (Product) request.getAttribute("product");
+
+// Load the wishlist status from the database for this product
+boolean isInWishlist = false;
+User currentUser = (User) session.getAttribute("user");
+
+if (currentUser != null && product != null) {
+    // First check if there's a cached status in the session
+    Boolean cachedStatus = (Boolean) session.getAttribute("isInWishlist_" + product.getProductId());
     
+    if (cachedStatus != null) {
+        // Use the cached status and remove it from session to avoid stale data
+        isInWishlist = cachedStatus;
+        session.removeAttribute("isInWishlist_" + product.getProductId());
+    } else {
+        // If no cached status, check database
+        try {
+            WishListDAO wishlistDAO = new WishListDAO();
+            isInWishlist = wishlistDAO.isProductInWishlist(currentUser.getUserId(), product.getProductId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle error silently, default to not in wishlist
+        }
+    }
+}
+// Make the status available to the JSP
+request.setAttribute("isInWishlist", isInWishlist);
+%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -124,9 +158,20 @@
 							    <input type="hidden" name="quantity" id="hidden-quantity" value="1">
 							    <button type="submit" class="btn btn-primary">Add to Cart</button>
 							</form>
-                            <button class="btn-wishlist">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                            </button>
+                            
+                           <form id="wishlistForm" action="${pageContext.request.contextPath}/WishlistServlet" method="post" style="display: inline;">
+							    <input type="hidden" name="productId" value="${product.productId}">
+							    <input type="hidden" name="action" value="${isInWishlist ? 'remove' : 'add'}">
+							    
+							    <button type="submit" class="btn-wishlist ${isInWishlist ? 'active' : ''}" id="wishlistButton" title="${isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}">
+							        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+							             fill="${isInWishlist ? 'red' : 'none'}"
+							             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+							             class="wishlist-icon">
+							            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+							        </svg>
+							    </button>
+							</form>
                         </div>
                         
                         <div class="product-meta">
@@ -221,7 +266,23 @@
             const increaseBtn = document.querySelector('.quantity-btn.increase');
             const quantityInput = document.querySelector('.quantity-input');
             const maxQuantity = ${product.quantity};
-            
+            const wishlistButton = document.getElementById('wishlistButton');
+            const wishlistForm = document.getElementById('wishlistForm');
+
+            if (wishlistButton) {
+                wishlistButton.addEventListener('click', function(e) {
+                    // Get the current action
+                    const currentAction = wishlistForm.querySelector('input[name="action"]').value;
+                    
+                    // Toggle the action for the next click
+                    const newAction = currentAction === 'add' ? 'remove' : 'add';
+                    
+                    // Update the form's action input
+                    wishlistForm.querySelector('input[name="action"]').value = newAction;
+                    
+                    // For visual feedback (optional)
+                    console.log('Wishlist action:', currentAction);
+                });
          // Update the quantity sync logic
             quantityInput.addEventListener('change', function() {
                 let value = parseInt(this.value);

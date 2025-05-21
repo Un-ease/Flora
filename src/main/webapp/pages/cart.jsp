@@ -60,7 +60,7 @@
 					        <c:when test="${empty cartItems}">
 					            <div class="empty-cart-message">
 					                <p>Your cart is empty</p>
-					                <a href="products.jsp" class="btn btn-primary">Continue Shopping</a>
+					                <a href="${pageContext.request.contextPath}/products" class="btn btn-primary">Continue Shopping</a>
 					            </div>
 					        </c:when>
 					        <c:otherwise>
@@ -109,14 +109,6 @@
 					    </c:choose>
 					</div>
                     
-                    <div class="cart-actions">
-                        <div class="coupon">
-                            <input type="text" placeholder="Coupon code">
-                            <button class="btn btn-outline">Apply Coupon</button>
-                        </div>
-                        <button class="btn btn-outline update-cart">Update Cart</button>
-                    </div>
-                    
                     <div class="cart-summary">
 					    <h2>Cart Totals</h2>
 					    <div class="summary-row">
@@ -132,7 +124,7 @@
 					        <span>$${total}</span>
 					    </div>
 					    <div class="checkout-button">
-					        <a href="checkout.jsp" class="btn btn-primary">Proceed to Checkout</a>
+					        <a href="${pageContext.request.contextPath}/pages/confirmation.jsp" class="btn btn-primary">Proceed to Checkout</a>
 					    </div>
 					</div>
                 </div>
@@ -152,52 +144,25 @@
      <%@ include file="/includes/footer.jsp" %>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Quantity selector functionality
-        document.querySelectorAll('.quantity-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const form = this.closest('.update-form');
-                const input = form.querySelector('.quantity-input');
-                let value = parseInt(input.value);
-                
-                if (this.classList.contains('decrease') && value > 1) {
-                    input.value = value - 1;
-                } 
-                else if (this.classList.contains('increase')) {
-                    input.value = value + 1;
-                }
-                
-                // Submit the form when quantity changes
-                form.submit();
-            });
-        });
-        
-        // AJAX form submissions for better UX
-        document.querySelectorAll('.update-form, .remove-form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                fetch(form.action, {
-                    method: 'POST',
-                    body: new FormData(form),
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        window.location.reload(); // Refresh to show updated cart
-                    } else {
-                        throw new Error('Network response was not ok');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error updating cart. Please try again.');
-                });
-            });
-        });
-    });
+	    document.addEventListener('DOMContentLoaded', function() {
+	        // Quantity selector functionality
+	        document.querySelectorAll('.quantity-btn').forEach(btn => {
+	    	btn.addEventListener('click', function() {
+	        const form = this.closest('.update-form');
+	        const input = form.querySelector('.quantity-input');
+	        let value = parseInt(input.value);
+	
+	        if (this.classList.contains('decrease') && value > 1) {
+	            input.value = value - 1;
+	        } 
+	        else if (this.classList.contains('increase')) {
+	            input.value = value + 1;
+	        }
+	
+	        form.submit();
+		    });
+		});
+		});
     </script>
 </body>
 </html>

@@ -1,12 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
-<jsp:useBean id="productDAO" class="dao.ProductDAO" scope="request"/>
-<jsp:useBean id="userDAO" class="dao.UserDAO" scope="request"/>
-
-<c:set var="products" value="${productDAO.allProducts}" scope="request"/>
-<c:set var="users" value="${userDAO.allUsers}" scope="request"/>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <c:set var="activeSection" value="${not empty param.section ? param.section : 'dashboard'}" scope="request"/>
 <!DOCTYPE html>
@@ -24,17 +19,17 @@
     <header class="admin-header">
         <div class="container">
             <div class="logo">
-                <a href="index.jsp">
+                <a href="${pageContext.request.contextPath}/">
                     <h1>Flora</h1>
                 </a>
             </div>
             <div class="admin-header-right">
                 <div class="admin-user">
                     <span>Admin User</span>
-                    <a href="index.jsp" id="logout-link">Logout</a>
-                    <form id="logoutForm" action="${pageContext.request.contextPath}/" method="get" style="display:none;">
-                        <!-- Hidden form for logout functionality -->
-                    </form>
+                    <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
+								    <form id="logoutForm" action="${pageContext.request.contextPath}/LogOutController" method="get" style="display:none;">
+								        <input type="hidden" name="csrfToken" value="${csrfToken}">
+								    </form>
                 </div>
             </div>
         </div>
@@ -48,10 +43,11 @@
                     <li><a href="#products-section" onclick="showSection('products-section')">Products</a></li>
                     <li><a href="#users-section" onclick="showSection('users-section')">Users</a></li>
                     <li><a href="#orders-section" onclick="showSection('orders-section')">Orders</a></li>
-                    <li><a href="#reports-section" onclick="showSection('reports-section')">Reports</a></li>
                 </ul>
             </nav>
         </aside>
+        <!-- Debug output -->
+
         
         <main class="admin-content">
             <!-- Dashboard Section -->
@@ -62,23 +58,23 @@
                 </div>
                 
                 <div class="admin-stats">
-                    <div class="admin-stat-card">
-                        <h3>Total Products</h3>
-                        <p class="stat-number">24</p>
-                    </div>
-                    <div class="admin-stat-card">
-                        <h3>Total Orders</h3>
-                        <p class="stat-number">156</p>
-                    </div>
-                    <div class="admin-stat-card">
-                        <h3>Total Customers</h3>
-                        <p class="stat-number">89</p>
-                    </div>
-                    <div class="admin-stat-card">
-                        <h3>Active Users</h3>
-                        <p class="stat-number">42</p>
-                    </div>
-                </div>
+				    <div class="admin-stat-card">
+				        <h3>Total Products</h3>
+				        <p class="stat-number">${totalProducts}</p>
+				    </div>
+				    <div class="admin-stat-card">
+				        <h3>Total Orders</h3>
+				        <p class="stat-number">${totalOrders}</p>
+				    </div>
+				    <div class="admin-stat-card">
+				        <h3>Total Customers</h3>
+				        <p class="stat-number">${totalCustomers}</p>
+				    </div>
+				    <div class="admin-stat-card">
+				        <h3>Active Users</h3>
+				        <p class="stat-number">${activeUsers}</p>
+				    </div>
+				</div>
                 
                 <div class="admin-section">
                     <div class="section-header">
@@ -87,58 +83,36 @@
                     </div>
                     <div class="admin-table-container">
                         <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Total</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#1005</td>
-                                    <td>John Smith</td>
-                                    <td>April 18, 2025</td>
-                                    <td><span class="status pending">Pending</span></td>
-                                    <td>$65.99</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <a href="#" class="btn-small">View</a>
-                                            <a href="#" class="btn-small">Edit</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#1004</td>
-                                    <td>Sarah Johnson</td>
-                                    <td>April 17, 2025</td>
-                                    <td><span class="status shipped">Shipped</span></td>
-                                    <td>$29.99</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <a href="#" class="btn-small">View</a>
-                                            <a href="#" class="btn-small">Edit</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#1003</td>
-                                    <td>Michael Brown</td>
-                                    <td>April 16, 2025</td>
-                                    <td><span class="status completed">Completed</span></td>
-                                    <td>$45.98</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <a href="#" class="btn-small">View</a>
-                                            <a href="#" class="btn-small">Edit</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+						    <thead>
+						        <tr>
+						            <th>Order ID</th>
+						            <th>Customer ID</th>
+						            <th>Date</th>
+						            <th>Status</th>
+						            <th>Total</th>
+						            <th>Actions</th>
+						        </tr>
+						    </thead>
+						    <tbody>
+						        <c:forEach items="${recentOrders}" var="order">
+						            <tr>
+						                <td>#${order.orderId}</td>
+						                <td>${order.userId}</td>
+						                <td><fmt:formatDate value="${order.orderDate}" pattern="MMMM d, yyyy"/></td>
+						                <td><span class="status ${order.status.toLowerCase()}">${order.status}</span></td>
+						                <td><fmt:formatNumber value="${order.totalAmount}" type="currency"/></td>
+						                <td>
+						                    <div class="action-buttons">
+						                        <a href="${pageContext.request.contextPath}/OrderDetailsServlet?orderId=${order.orderId}" 
+						                           class="btn-small">View</a>
+						                        <a href="#" class="btn-small" 
+						                           onclick="editOrder(${order.orderId}, '${order.status}')">Edit</a>
+						                    </div>
+						                </td>
+						            </tr>
+						        </c:forEach>
+						    </tbody>
+						</table>
                     </div>
                 </div>
                 
@@ -149,58 +123,45 @@
                     </div>
                     <div class="admin-table-container">
                         <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Product ID</th>
-                                    <th>Image</th>
-                                    <th>Name</th>
-                                    <th>Price</th>
-                                    <th>Stock</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#P001</td>
-                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Red Rose Bouquet" class="product-thumbnail"></td>
-                                    <td>Red Rose Bouquet</td>
-                                    <td>$29.99</td>
-                                    <td>15</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <a href="#" class="btn-small">Edit</a>
-                                            <a href="#" class="btn-small">Delete</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#P002</td>
-                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Tulip Arrangement" class="product-thumbnail"></td>
-                                    <td>Tulip Arrangement</td>
-                                    <td>$24.99</td>
-                                    <td>8</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <a href="#" class="btn-small">Edit</a>
-                                            <a href="#" class="btn-small">Delete</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#P003</td>
-                                    <td><img src="/placeholder.svg?height=40&width=40" alt="Lily Bouquet" class="product-thumbnail"></td>
-                                    <td>Lily Bouquet</td>
-                                    <td>$34.99</td>
-                                    <td>12</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <a href="#" class="btn-small">Edit</a>
-                                            <a href="#" class="btn-small">Delete</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+						    <thead>
+						        <tr>
+						            <th>Product ID</th>
+						            <th>Image</th>
+						            <th>Name</th>
+						            <th>Price</th>
+						            <th>Stock</th>
+						            <th>Actions</th>
+						        </tr>
+						    </thead>
+						    <tbody>
+						        <c:forEach items="${recentProducts}" var="product">
+						            <tr>
+						                <td>#${product.productId}</td>
+						                <td><img src="${pageContext.request.contextPath}/uploads/${product.image}" 
+						                         alt="${product.productName}" class="product-thumbnail"></td>
+						                <td>${product.productName}</td>
+						                <td><fmt:formatNumber value="${product.price}" type="currency"/></td>
+						                <td>${product.quantity}</td>
+						                <td>
+						                    <div class="action-buttons">
+						                        <button class="btn-small" 
+						                                onclick="editProduct(${product.productId}, '${product.productName}', ${product.price}, ${product.quantity}, '${product.productDescription}')">
+						                            Edit
+						                        </button>
+						                        <form action="${pageContext.request.contextPath}/RemoveProductController" 
+						                              method="post" style="display:inline;">
+						                            <input type="hidden" name="productID" value="${product.productId}">
+						                            <button type="submit" class="btn-small" 
+						                                    onclick="return confirm('Are you sure you want to delete this product?')">
+						                                Delete
+						                            </button>
+						                        </form>
+						                    </div>
+						                </td>
+						            </tr>
+						        </c:forEach>
+						    </tbody>
+						</table>
                     </div>
                 </div>
             </section>
@@ -302,7 +263,7 @@
                     <div class="alert alert-success" style="display: none;">Product updated successfully!</div>
                     <div class="alert alert-danger" style="display: none;">Error updating product. Please try again.</div>
                     
-                    <form class="admin-form" id="editProductForm" form action="${pageContext.request.contextPath}/EditProductController" method="post" enctype="multipart/form-data">
+                    <form class="admin-form" id="editProductForm" action="${pageContext.request.contextPath}/EditProductController" method="post" enctype="multipart/form-data">
                         <input type="hidden" id="edit-product-id" name="productId">
                         <div class="form-row">
                             <div class="form-group">
@@ -489,7 +450,7 @@
                             <thead>
                                 <tr>
                                     <th>Order ID</th>
-                                    <th>Customer</th>
+                                    <th>Customer ID</th>
                                     <th>Date</th>
                                     <th>Status</th>
                                     <th>Total</th>
@@ -497,169 +458,40 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>#1005</td>
-                                    <td>John Smith</td>
-                                    <td>April 18, 2025</td>
-                                    <td><span class="status pending">Pending</span></td>
-                                    <td>$65.99</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small">View</button>
-                                            <button class="btn-small">Edit</button>
-                                            <button class="btn-small">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#1004</td>
-                                    <td>Sarah Johnson</td>
-                                    <td>April 17, 2025</td>
-                                    <td><span class="status shipped">Shipped</span></td>
-                                    <td>$29.99</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small">View</button>
-                                            <button class="btn-small">Edit</button>
-                                            <button class="btn-small">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#1003</td>
-                                    <td>Michael Brown</td>
-                                    <td>April 16, 2025</td>
-                                    <td><span class="status completed">Completed</span></td>
-                                    <td>$45.98</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small">View</button>
-                                            <button class="btn-small">Edit</button>
-                                            <button class="btn-small">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#1002</td>
-                                    <td>Jane Doe</td>
-                                    <td>April 15, 2025</td>
-                                    <td><span class="status pending">Pending</span></td>
-                                    <td>$45.98</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small">View</button>
-                                            <button class="btn-small">Edit</button>
-                                            <button class="btn-small">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#1001</td>
-                                    <td>Jane Doe</td>
-                                    <td>March 28, 2025</td>
-                                    <td><span class="status completed">Completed</span></td>
-                                    <td>$29.99</td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-small">View</button>
-                                            <button class="btn-small">Edit</button>
-                                            <button class="btn-small">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
+						        <c:forEach items="${orders}" var="order">
+						            <tr>
+						                <td>#${order.orderId}</td>
+						                <td>${order.userId}</td>
+						                <td><fmt:formatDate value="${order.orderDate}" pattern="MMMM d, yyyy"/></td>
+						                <td><span class="status ${order.status.toLowerCase()}">${order.status}</span></td>
+						                <td><fmt:formatNumber value="${order.totalAmount}" type="currency"/></td>
+						                <td>
+						                    <div class="action-buttons">
+						                        <a href="${pageContext.request.contextPath}/OrderDetailsServlet?orderId=${order.orderId}" 
+						                           class="btn-small">View</a>
+						                           
+						                        <form action="${pageContext.request.contextPath}/DeleteOrderController" 
+						                              method="post" style="display:inline;">
+						                            <input type="hidden" name="orderId" value="${order.orderId}">
+						                            <button type="submit" class="btn-small" 
+						                             >
+						                                Delete
+						                            </button>
+						                        </form>
+						                    </div>
+						                </td>
+						            </tr>
+						        </c:forEach>
+						    </tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- Reports Section -->
-            <section id="reports-section" class="admin-section-container">
-                <div class="admin-page-header">
-                    <h2>Reports</h2>
-                    <p>View sales and inventory reports</p>
-                </div>
+
                 
-                <div class="admin-section">
-                    <div class="section-header">
-                        <h3>Sales Summary</h3>
-                    </div>
-                    <div class="admin-stats">
-                        <div class="admin-stat-card">
-                            <h3>Today's Sales</h3>
-                            <p class="stat-number">$245.98</p>
-                        </div>
-                        <div class="admin-stat-card">
-                            <h3>Weekly Sales</h3>
-                            <p class="stat-number">$1,245.50</p>
-                        </div>
-                        <div class="admin-stat-card">
-                            <h3>Monthly Sales</h3>
-                            <p class="stat-number">$4,285.75</p>
-                        </div>
-                        <div class="admin-stat-card">
-                            <h3>Annual Sales</h3>
-                            <p class="stat-number">$52,648.30</p>
-                        </div>
-                    </div>
-                </div>
                 
-                <div class="admin-section">
-                    <div class="section-header">
-                        <h3>Top Selling Products</h3>
-                    </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Rank</th>
-                                    <th>Product</th>
-                                    <th>Category</th>
-                                    <th>Units Sold</th>
-                                    <th>Revenue</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Red Rose Bouquet</td>
-                                    <td>Roses</td>
-                                    <td>45</td>
-                                    <td>$1,349.55</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Mixed Bouquet</td>
-                                    <td>Bouquets</td>
-                                    <td>32</td>
-                                    <td>$1,279.68</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Tulip Arrangement</td>
-                                    <td>Tulips</td>
-                                    <td>28</td>
-                                    <td>$699.72</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>Lily Bouquet</td>
-                                    <td>Lilies</td>
-                                    <td>18</td>
-                                    <td>$629.82</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>Sunflower Bunch</td>
-                                    <td>Sunflowers</td>
-                                    <td>15</td>
-                                    <td>$299.85</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
+            
         </main>
     </div>
 

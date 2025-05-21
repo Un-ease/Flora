@@ -195,4 +195,42 @@ public class OrderDAO {
         }
         return 0;
     }
+    
+    public List<Order> getAllOrders() throws SQLException {
+        List<Order> orders = new ArrayList<>();
+        String query = "SELECT o.*, u.full_name FROM orders o JOIN users u ON o.user_id = u.user_id ORDER BY o.order_date DESC";
+        
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Order order = new Order();
+                    order.setOrderId(rs.getInt("order_id"));
+                    order.setUserId(rs.getInt("user_id"));
+                    order.setOrderDate(rs.getTimestamp("order_date"));
+                    order.setStatus(rs.getString("status"));
+                    order.setTotalAmount(rs.getDouble("total_amount"));
+                    order.setShippingAddress(rs.getString("shipping_address"));
+                    order.setPaymentMethod(rs.getString("payment_method"));
+                    orders.add(order);
+                }
+            }
+        }
+        return orders;
+    }
+    
+    public boolean deleteOrder(int orderId) throws SQLException {
+        // First delete order items
+        String deleteItemsQuery = "DELETE FROM order_items WHERE order_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(deleteItemsQuery)) {
+            ps.setInt(1, orderId);
+            ps.executeUpdate();
+        }
+        
+        // Then delete the order
+        String deleteOrderQuery = "DELETE FROM orders WHERE order_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(deleteOrderQuery)) {
+            ps.setInt(1, orderId);
+            return ps.executeUpdate() > 0;
+        }
+    }
 }

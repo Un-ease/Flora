@@ -215,4 +215,35 @@ public class UserDAO {
         }
         return false;
     }
+    
+    public int getUserCountByRole(String role) throws SQLException, ClassNotFoundException {
+        String query = "SELECT COUNT(*) FROM users WHERE role = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, role);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+        return 0;
+    }
+
+    public int getActiveUserCount() throws SQLException, ClassNotFoundException {
+        // Assuming 'active' means logged in within last 30 days
+        String query = "SELECT COUNT(*) FROM users";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+        return 0;
+    }
 }

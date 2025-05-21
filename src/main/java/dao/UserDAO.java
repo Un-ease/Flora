@@ -197,4 +197,22 @@ public class UserDAO {
         return null;
     }
 
+    
+    public boolean verifyPassword(int userId, String password) throws SQLException, ClassNotFoundException {
+        String query = "SELECT password FROM users WHERE user_id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userId);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String storedPassword = rs.getString("password");
+                    // Use your password hashing comparison here
+                    return storedPassword.equals(password); // Replace with proper password matching
+                }
+            }
+        }
+        return false;
+    }
 }

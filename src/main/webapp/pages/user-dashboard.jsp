@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-   
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%
     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     response.setHeader("Pragma", "no-cache");
@@ -75,7 +75,7 @@
                         <!-- Dashboard Tab -->
                         <div class="dashboard-tab active" id="dashboard-tab">
                             <div class="welcome-message">
-                                <h2>Welcome back, ${sessionScope.user.fullName}!</h2>
+                                <h2>Welcome back, ${user.fullName}!</h2>
                                 <p>From your account dashboard you can view your recent orders, manage your wishlist, and edit your account details.</p>
                             </div>
                             
@@ -86,7 +86,7 @@
                                     </div>
                                     <div class="card-content">
                                         <h3>Orders</h3>
-                                        <p>You have 3 orders</p>
+        								<p>You have ${orderCount} order${orderCount == 1 ? '' : 's'}</p>
                                     </div>
                                 </div>
                                 
@@ -124,29 +124,33 @@
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>#FL12345</td>
-                                                <td>April 6, 2025</td>
-                                                <td><span class="status-badge delivered">Delivered</span></td>
-                                                <td>$188.96</td>
-                                                <td><a href="#" class="btn-view">View</a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#FL12344</td>
-                                                <td>March 22, 2025</td>
-                                                <td><span class="status-badge delivered">Delivered</span></td>
-                                                <td>$75.50</td>
-                                                <td><a href="#" class="btn-view">View</a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#FL12343</td>
-                                                <td>February 15, 2025</td>
-                                                <td><span class="status-badge delivered">Delivered</span></td>
-                                                <td>$129.99</td>
-                                                <td><a href="#" class="btn-view">View</a></td>
-                                            </tr>
-                                        </tbody>
+                                       <tbody>
+							                <c:choose>
+							                    <c:when test="${not empty recentOrders}">
+							                        <c:forEach var="order" items="${recentOrders}">
+							                            <tr>
+							                                <td>#FL${order.orderId}</td>
+							                                <td><fmt:formatDate value="${order.orderDate}" pattern="MMMM d, yyyy"/></td>
+							                                <td>
+							                                    <span class="status-badge ${order.status.toLowerCase()}">
+							                                        ${order.status}
+							                                    </span>
+							                                </td>
+							                                <td><fmt:formatNumber value="${order.totalAmount}" type="currency"/></td>
+							                                <td>
+							                                    <a href="${pageContext.request.contextPath}/OrderDetailsServlet?orderId=${order.orderId}" 
+							                                       class="btn-view">View</a>
+							                                </td>
+							                            </tr>
+							                        </c:forEach>
+							                    </c:when>
+							                    <c:otherwise>
+							                        <tr>
+							                            <td colspan="5" class="text-center">No recent orders found</td>
+							                        </tr>
+							                    </c:otherwise>
+							                </c:choose>
+							            </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -154,58 +158,48 @@
                         
                         <!-- Orders Tab -->
                         <div class="dashboard-tab" id="orders-tab">
-                            <h2>My Orders</h2>
-                            <div class="table-responsive">
-                                <table class="orders-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Order</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
-                                            <th>Total</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>#FL12345</td>
-                                            <td>April 6, 2025</td>
-                                            <td><span class="status-badge delivered">Delivered</span></td>
-                                            <td>$188.96</td>
-                                            <td><a href="#" class="btn-view">View</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#FL12344</td>
-                                            <td>March 22, 2025</td>
-                                            <td><span class="status-badge delivered">Delivered</span></td>
-                                            <td>$75.50</td>
-                                            <td><a href="#" class="btn-view">View</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#FL12343</td>
-                                            <td>February 15, 2025</td>
-                                            <td><span class="status-badge delivered">Delivered</span></td>
-                                            <td>$129.99</td>
-                                            <td><a href="#" class="btn-view">View</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#FL12342</td>
-                                            <td>January 30, 2025</td>
-                                            <td><span class="status-badge delivered">Delivered</span></td>
-                                            <td>$95.75</td>
-                                            <td><a href="#" class="btn-view">View</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#FL12341</td>
-                                            <td>January 15, 2025</td>
-                                            <td><span class="status-badge delivered">Delivered</span></td>
-                                            <td>$112.50</td>
-                                            <td><a href="#" class="btn-view">View</a></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+						    <h2>My Orders</h2>
+						    <div class="table-responsive">
+						        <table class="orders-table">
+						            <thead>
+						                <tr>
+						                    <th>Order</th>
+						                    <th>Date</th>
+						                    <th>Status</th>
+						                    <th>Total</th>
+						                    <th>Actions</th>
+						                </tr>
+						            </thead>
+						            <tbody>
+						                <c:choose>
+						                    <c:when test="${not empty allOrders}">
+						                        <c:forEach var="order" items="${allOrders}">
+						                            <tr>
+						                                <td>#FL${order.orderId}</td>
+						                                <td><fmt:formatDate value="${order.orderDate}" pattern="MMMM d, yyyy"/></td>
+						                                <td>
+						                                    <span class="status-badge ${order.status.toLowerCase()}">
+						                                        ${order.status}
+						                                    </span>
+						                                </td>
+						                                <td><fmt:formatNumber value="${order.totalAmount}" type="currency"/></td>
+						                                <td>
+						                                    <a href="${pageContext.request.contextPath}/OrderDetailsServlet?orderId=${order.orderId}" 
+						                                       class="btn-view">View</a>
+						                                </td>
+						                            </tr>
+						                        </c:forEach>
+						                    </c:when>
+						                    <c:otherwise>
+						                        <tr>
+						                            <td colspan="5" class="text-center">No orders found</td>
+						                        </tr>
+						                    </c:otherwise>
+						                </c:choose>
+						            </tbody>
+						        </table>
+						    </div>
+						</div>
                         
                         <!-- Wishlist Tab -->
                         <div class="dashboard-tab" id="wishlist-tab">

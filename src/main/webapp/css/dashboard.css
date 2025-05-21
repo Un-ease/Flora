@@ -260,7 +260,7 @@
     color: #2e7d32;
 }
 
-.status-badge.processing {
+.status-badge.pending {
     background-color: #fff8e1;
     color: #ff8f00;
 }

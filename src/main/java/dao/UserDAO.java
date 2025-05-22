@@ -199,7 +199,7 @@ public class UserDAO {
 
     
     public boolean verifyPassword(int userId, String password) throws SQLException, ClassNotFoundException {
-        String query = "SELECT password FROM users WHERE user_id = ?";
+        String query = "SELECT password_hash FROM users WHERE user_id = ?"; // Change to password_hash
         
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(query)) {
@@ -207,14 +207,15 @@ public class UserDAO {
             
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    String storedPassword = rs.getString("password");
-                    // Use your password hashing comparison here
-                    return storedPassword.equals(password); // Replace with proper password matching
+                    String storedPasswordHash = rs.getString("password_hash"); // Use password_hash
+                    // Use BCrypt to compare the provided password with the stored hash
+                    return BCrypt.checkpw(password, storedPasswordHash); // Proper password comparison
                 }
             }
         }
         return false;
     }
+
     
     public int getUserCountByRole(String role) throws SQLException, ClassNotFoundException {
         String query = "SELECT COUNT(*) FROM users WHERE role = ?";

@@ -41,7 +41,7 @@
                         </div>
                         <h3>Anij Gurung</h3>
                         <span class="team-role">Team Member</span>
-                        <p>With over 15 years of experience in floral design, Emma brings her artistic vision and passion for sustainability to every aspect of Flora.</p>
+                        <p>Hi, My name is Anij Gurung. And I'm a cyber security enthusiast and an independent security researcher. I like to read, listen to music and play some games in my free time.</p>
                     </div>
 
                     <div class="team-card">
@@ -50,7 +50,7 @@
                         </div>
                         <h3>Roshnee Gurung</h3>
                         <span class="team-role">Team Member</span>
-                        <p>Michael's innovative arrangements have been featured in numerous publications. He specializes in creating unique, seasonal compositions.</p>
+                        <p>Hi, my name is Roshnee Gurung. I have knowledge of frontend development, coding with Python for web projects, and basic networking concepts.  Outside of work, I love playing basketball, traveling, and exploring different cultures, which inspire me in many ways..</p>
                     </div>
 
                     <div class="team-card">
@@ -59,7 +59,7 @@
                         </div>
                         <h3>Ayush Gurung</h3>
                         <span class="team-role">Team Member</span>
-                        <p>Sophia ensures that every order is processed with care and delivered on time, maintaining Flora's reputation for exceptional service.</p>
+                        <p>Lorem</p>
                     </div>
 
                     <div class="team-card">
@@ -68,16 +68,16 @@
                         </div>
                         <h3>Prabesh Gurung</h3>
                         <span class="team-role">Team Member</span>
-                        <p>James works directly with local growers to source the freshest, most sustainable blooms for our arrangements and retail selection.</p>
+                        <p>Lorem</p>
                     </div>
 
                     <div class="team-card">
                         <div class="team-image">
-                            <img src="/placeholder.svg?height=200&width=200" alt="Santosh B.K.">
+                            <img src="../items/santosh.jpg" alt="Santosh B.K.">
                         </div>
                         <h3>Santosh B.k</h3>
                         <span class="team-role">Team Member</span>
-                        <p>Olivia's warm personality and attention to detail ensure that every customer interaction with Flora is memorable and positive.</p>
+                        <p>Hi, my name is Santosh B.K. I’m a UI/UX designer with a bit of knowledge in frontend development. In my free time, I enjoy listening to music, engaging in adventurous activities, and exploring my interest in free writing and literature.</p>
                     </div>
                 </div>
             </div>

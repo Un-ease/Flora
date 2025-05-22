@@ -31,7 +31,8 @@ public class SessionFilter extends HttpFilter implements Filter {
         "/pages/js/",
         "/items/",
         "/index",
-        "/uploads/"
+        "/uploads/",
+        "/pages/adout.jsp"
     };
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
